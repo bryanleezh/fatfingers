@@ -1,7 +1,7 @@
-"use client"
+"use client";
 
 import * as React from "react"
-import { Sun, Moon, Cigarette, Citrus } from "lucide-react";
+import { Palette } from "lucide-react";
 import { useTheme } from "next-themes"
 
 import { Button } from "@/components/ui/button"
@@ -16,22 +16,7 @@ export default function ThemeToggles() {
     const { theme, setTheme, themes } = useTheme();
     const [ mounted, setMounted ] = React.useState(false);
 
-    // TODO: Swap icons to words
-    const renderIcon = () => {
-        switch (theme) {
-            case 'dark':
-                return <Moon className="h-[1.2rem] w-[1.2rem]" />;
-            case 'light':
-                return <Sun className="h-[1.2rem] w-[1.2rem]" />;
-            case 'lightblue':
-                return <Cigarette className="h-[1.2rem] w-[1.2rem]" />;
-            case 'darkblue':
-                return <Citrus className="h-[1.2rem] w-[1.2rem]" />;
-            default:
-                return <Sun className="h-[1.2rem] w-[1.2rem]" />;
-        }
-    };
-
+    // can remove to prevent slow loading
     React.useEffect(() => {
         setMounted(true);
     }, []);
@@ -44,14 +29,17 @@ export default function ThemeToggles() {
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="icon">
-                    {renderIcon()}
+                <Button className="rounded-full" variant="ghost" size="icon">
+                    <Palette className="h-5 w-5"/>
                     <span className="sr-only">Toggle theme</span>
                 </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
                 {themes.map(theme => (
-                    <DropdownMenuItem key={theme} onClick={() => setTheme(theme)}>
+                    <DropdownMenuItem 
+                        key={theme} 
+                        onClick={() => setTheme(theme)}
+                    >
                         {theme}
                     </DropdownMenuItem>    
                 ))}
