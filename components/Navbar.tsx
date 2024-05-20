@@ -1,17 +1,17 @@
 import { Link } from "next-view-transitions";
 import { Button } from "@/components/ui/button";
 import { DropdownMenuTrigger, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuContent, DropdownMenu } from "@/components/ui/dropdown-menu";
-import { Bath, CircleUserRound, Info, Keyboard, Settings } from "lucide-react";
+import { CircleUserRound, Info, Keyboard, Settings } from "lucide-react";
 import ThemeToggles from "./ThemeToggle";
-import fatlogo from "@/public/fat-fingers-logo.png"
+import fatlogo from "@/public/fat-fingers-icon.png"
 import Image from "next/image";
 
 export default function Navbar() {
   return (
     <header className="flex h-16 w-full items-center justify-between py-12 md:px-6">
         <Link className="flex items-center gap-2" href="/">
-            <Bath className="h-6 w-6" />
-            {/* <Image src={fatlogo} alt="logo" className="h-6 w-6"/> */}
+            {/* <Bath className="h-6 w-6" /> */}
+            <Image src={fatlogo} alt="logo" className="h-12 w-12"/>
             <span className="font-semibold">Fat Fingers</span>
         </Link>
         <div className="flex items-center gap-4 md:gap-6">
