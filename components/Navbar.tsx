@@ -10,7 +10,6 @@ export default function Navbar() {
   return (
     <header className="flex h-16 w-full items-center justify-between py-12 md:px-6">
         <Link className="flex items-center gap-2" href="/">
-            {/* <Bath className="h-6 w-6" /> */}
             <Image src={fatlogo} alt="logo" className="h-12 w-12"/>
             <span className="font-semibold">Fat Fingers</span>
         </Link>

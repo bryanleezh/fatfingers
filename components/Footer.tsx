@@ -15,7 +15,7 @@ export default function Footer() {
             </Link>
         </div>
         <div className="text-sm text-gray-500 dark:text-gray-400">
-            © 2024 Your Company. All rights reserved.
+            © 2024 Bryan Lee
         </div>
     </footer>
   )
