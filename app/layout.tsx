@@ -28,7 +28,7 @@ export default function RootLayout({
             defaultTheme="system" 
             enableSystem 
             disableTransitionOnChange
-            themes={['light', 'dark', 'lightblue', 'darkblue']}
+            themes={['light', 'dark', 'green', 'dgreen', 'orange', 'dorange']}
           >
             <Navbar />
             <main className={`flex-grow ${inter.className}`}>
