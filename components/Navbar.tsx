@@ -10,7 +10,7 @@ export default function Navbar() {
   return (
     <header className="flex h-16 w-full items-center justify-between py-12 md:px-6">
         <Link className="flex items-center gap-2" href="/">
-            <Image src={fatlogo} alt="logo" className="h-12 w-12"/>
+            <Image src={fatlogo} alt="logo" priority className="h-12 w-12"/>
             <span className="font-semibold">Fat Fingers</span>
         </Link>
         <div className="flex items-center gap-4 md:gap-6">
