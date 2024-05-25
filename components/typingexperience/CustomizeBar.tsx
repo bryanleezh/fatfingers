@@ -12,7 +12,6 @@ export default function CustomizeBar() {
     const setTime = useSettingsStore((state) => state.setTime);
     const setMode = useSettingsStore((state) => state.setMode);
     
-    // TODO: Add logic to buttons for main typing settings
     const handleTimeChange = (newTime: number) => {
         setTime(newTime);
     }
@@ -27,6 +26,7 @@ export default function CustomizeBar() {
                 <div>
                     <Button 
                         variant="texthighlight"
+                        active={mode === 'time'}
                         onClick={() => handleModeChange('time')}
                     >
                         <Timer className="w-4 h-4"/>
@@ -34,13 +34,14 @@ export default function CustomizeBar() {
                     </Button>
                     <Button 
                         variant="texthighlight"
+                        active={mode === 'words'}
                         onClick={() => handleModeChange('words')}
                     >
                         <WholeWord className="w-4 h-4"/>
                         <span className="pl-2">words</span>
                     </Button>
                 </div>
-                <Separator orientation="vertical" className="h-6 w-0.5 bg-accent-foreground"/>
+                <Separator orientation="vertical" className="h-6 w-0.5 bg-muted-foreground"/>
                 <div>
                     {times.map((t) => (
                         <Button
