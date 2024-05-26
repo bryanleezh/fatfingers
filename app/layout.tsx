@@ -28,10 +28,10 @@ export default function RootLayout({
             defaultTheme="system" 
             enableSystem 
             disableTransitionOnChange
-            themes={['light', 'dark', 'green', 'dgreen', 'orange', 'dorange']}
+            themes={['light', 'dark', 'green', 'dgreen', 'orange']}
           >
             <Navbar />
-            <main className={`flex-grow ${inter.className}`}>
+            <main className={`flex-grow ${inter.className} flex flex-col`}>
               {children}
             </main>
             <Footer />
