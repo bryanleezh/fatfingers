@@ -129,3 +129,14 @@
       @apply flex-grow;
     }
   }
+
+  @layer components {
+    .text-justify {
+      text-align: justify;
+    }
+    .text-justify::after {
+      content: '';
+      display: inline-block;
+      width: 100%;
+    }
+  }
