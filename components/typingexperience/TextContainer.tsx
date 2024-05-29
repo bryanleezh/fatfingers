@@ -1,4 +1,5 @@
 import { useMemo } from "react"
+import Character from "./Character";
 
 type TextContainerProps = {
     word: string
@@ -10,16 +11,10 @@ export default function TextContainer( {word} : TextContainerProps ) {
     }, [word]);
 
     return (
-        <div className="relative left-0 top-0 break-all text-2xl opacity-80 lg:text-2xl">
+        <div className="relative left-0 top-0 break-all text-2xl opacity-60">
             {gameText.map((char, index) => {
-                return ( 
-                    <span 
-                        key={index + char} 
-                        className="text-primary font-mono"
-                        // TODO: Add variable font
-                    >
-                        {char}
-                    </span>
+                return (
+                    <Character key={index + char} char={char} /> 
                 )
             })}
         </div>
