@@ -5,8 +5,6 @@ type SettingsState = {
     setTime: (time: number) => void;
     mode: 'time' | 'words';
     setMode: (mode: 'time' | 'words') => void;
-    isFocused: boolean;
-    setFocused: (isFocused: boolean) => void;
 };
 
 export const useSettingsStore = create<SettingsState>((set) => ({
@@ -14,6 +12,4 @@ export const useSettingsStore = create<SettingsState>((set) => ({
     setTime: (time: number) => set({ time }),
     mode: 'time',
     setMode: (mode: 'time' | 'words') => set({ mode }),
-    isFocused: false,
-    setFocused: (isFocused: boolean) => set({ isFocused }),
 }));
