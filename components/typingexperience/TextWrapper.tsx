@@ -1,4 +1,4 @@
-import { useSettingsStore } from "@/store/settings";
+import { useGameStateStore } from "@/store/gameState";
 import { ScanEye } from "lucide-react";
 
 type TextWrapperProps = {
@@ -6,8 +6,8 @@ type TextWrapperProps = {
 };
 
 export default function TextWrapper( {children}: TextWrapperProps ) {
-    const isFocused = useSettingsStore((state) => state.isFocused); 
-    const setFocused = useSettingsStore((state) => state.setFocused);
+    const isFocused = useGameStateStore((state) => state.isFocused); 
+    const setFocused = useGameStateStore((state) => state.setFocused);
 
     const handleFocus = () => {
         setFocused(true);
