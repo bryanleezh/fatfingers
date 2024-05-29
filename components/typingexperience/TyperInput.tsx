@@ -1,9 +1,9 @@
 "use client";
 
 import { useSettingsStore } from "@/store/settings";
-import { Input } from "../ui/input";
 import TextWrapper from "./TextWrapper";
 import TextContainer from "./TextContainer";
+import Input from "./Input";
 
 export default function TyperInput() {
     const time = useSettingsStore((state) => state.time);
@@ -25,6 +25,7 @@ export default function TyperInput() {
         <div className="w-full h-full mx-auto flex flex-col items-center justify-center max-w-5xl gap-4 px-4 xl:px-0">
             <TextWrapper>
                 <TextContainer word={textinput}/>
+                <Input word={textinput} />
             </TextWrapper>
         </div>
     )
