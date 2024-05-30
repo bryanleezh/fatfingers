@@ -5,6 +5,8 @@ type SettingsState = {
     setTime: (time: number) => void;
     mode: 'time' | 'words';
     setMode: (mode: 'time' | 'words') => void;
+    resetKey: "" | "Enter" | "Tab" | "Escape";
+    setResetKey: (key: "Enter" | "Tab" | "Escape") => void;
 };
 
 export const useSettingsStore = create<SettingsState>((set) => ({
@@ -12,4 +14,6 @@ export const useSettingsStore = create<SettingsState>((set) => ({
     setTime: (time: number) => set({ time }),
     mode: 'time',
     setMode: (mode: 'time' | 'words') => set({ mode }),
+    resetKey: "Enter",
+    setResetKey: (resetKey: "Enter" | "Tab" | "Escape") => set({ resetKey }),
 }));
