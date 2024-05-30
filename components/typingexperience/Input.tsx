@@ -2,11 +2,11 @@ import { useCallback, useMemo } from "react";
 import Character from "./Character";
 
 type InputProps = {
-    word: string,
+    userInput: string;
+    word: string;
 }
 
-export default function Input( { word } : InputProps) {
-    const userInput: string = "provided pisk";
+export default function Input( { userInput, word } : InputProps) {
     const userInputs = useMemo(() => {
         return userInput.split('');
     }, [userInput]);
