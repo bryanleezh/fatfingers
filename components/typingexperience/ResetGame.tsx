@@ -1,5 +1,4 @@
 import { RotateCcw } from "lucide-react";
-import { Button } from "../ui/button";
 
 type resetGameProps = {
     reset: () => void;
@@ -8,9 +7,9 @@ type resetGameProps = {
 export default function ResetGame( { reset } : resetGameProps ) {
     return (
         <div className="flex justify-center items-center">
-            <Button className="rounded-full" size="icon" variant="ghost" onClick={reset}>
+            <button className="rounded-full hover:bg-accent" onClick={reset}>
                 <RotateCcw className="text-primary text-2xl gap-3"/>
-            </Button>
+            </button>
         </div>
     )
 }
