@@ -25,8 +25,8 @@ export default function RootLayout({
         <body className="h-screen flex flex-col">
           <ThemeProvider 
             attribute="class" 
-            defaultTheme="system" 
-            enableSystem 
+            defaultTheme="light"
+            enableSystem={false}
             disableTransitionOnChange
             themes={['light', 'dark', 'green', 'dgreen', 'orange']}
           >
