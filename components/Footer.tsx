@@ -8,7 +8,9 @@ export default function Footer() {
         <div className="flex items-center space-x-2">
             <Link
                 className="inline-flex items-center space-x-2 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
-                href="/"
+                href="https://github.com/bryanleezh/fatfingers"
+                target="_blank" 
+                rel="noopener noreferrer"
             >
                 <Github className="h-5 w-5" />
                 <span>GitHub</span>
