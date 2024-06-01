@@ -3,6 +3,8 @@ import { create } from "zustand";
 type GameState = {
     isFocused: boolean;
     setFocused: (isFocused: boolean) => void;
+    gameStart: boolean;
+    setGameStart: (gameStart: boolean) => void;
     endGame: boolean,
     setEndGame: (endGame: boolean) => void,
     accuracy: number,
@@ -22,6 +24,8 @@ type GameState = {
 export const useGameStateStore = create<GameState>((set) => ({
     isFocused: false,
     setFocused: (isFocused: boolean) => set({ isFocused }),
+    gameStart: false,
+    setGameStart: (gameStart: boolean) => set({ gameStart }),
     endGame: false,
     setEndGame: (endGame) => set({ endGame }),
     accuracy: 0,
