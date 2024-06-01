@@ -5,32 +5,29 @@ import CustomizeBar from "./CustomizeBar";
 import TyperInput from "./TyperInput";
 import { useSettingsStore } from "@/store/settings";
 import CountDownTimer from "./CountDownTimer";
+import { useEffect, useState } from "react";
 
 // TODO: Add conditional for game start to replace CustomizeBar with timer
 export default function Typer() {
-    // conditionally render either customize bar or countdown
-    const time = useSettingsStore((state) => state.time);
+    const [fadeClass, setFadeClass] = useState(''); // State for controlling fade-out class
     const gameStart = useGameStateStore((state) => state.gameStart);
-    const endGame = useGameStateStore((state) => state.endGame);
-    const setGameStart = useGameStateStore((state) => state.setGameStart);
-    const setEndGame = useGameStateStore((state) => state.setEndGame);
 
-    const gameComplete = () => {
-        // flag for game state
-        setGameStart(false);
-        console.log("show results");
-        // flag for showing results 
-        setEndGame(true);
-    };
+    useEffect(() => {
+        if (gameStart) {
+            setFadeClass('fade-out'); // Apply fade-out class when game starts
+        } else {
+            setFadeClass(''); // Remove fade-out class when game stops
+        }
+    }, [gameStart]); //
 
+    // TODO: Change countdown timer to empty div to hide the customizebar on gamestart
+    // TODO: Move countdown timer to separate component in typerinput above textwrapper
     return (
         <div className="flex flex-col gap-4 w-3/4 flex-grow items-center justify-center">
-            <div className="w-full h-12 flex items-center justify-center">
-            {gameStart ? 
-                <CountDownTimer gameStart={gameStart} onTimeUp={gameComplete} />
-                : 
-                <CustomizeBar />
-            }
+            <div className="w-full flex items-center justify-center">
+                <div className={`fade ${fadeClass}`}>
+                    <CustomizeBar />
+                </div>
             </div>
             <div className="flex flex-grow items-center justify-center w-full">
                 <TyperInput />
