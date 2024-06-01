@@ -86,7 +86,7 @@ export default function TyperInput() {
     // TODO: Add scoring logic
     return (
         <div className="w-full h-full mx-auto flex flex-col items-center justify-center max-w-5xl gap-4 px-4 xl:px-0">
-            <CountDownTimer gameStart={gameStart} onTimeUp={gameComplete} />
+            {/* <CountDownTimer gameStart={gameStart} onTimeUp={gameComplete} /> */}
             <TextWrapper>
                 <TextContainer word={word}/>
                 <Input userInput={userInput} word={word} />

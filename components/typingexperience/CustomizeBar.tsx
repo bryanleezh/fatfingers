@@ -21,7 +21,7 @@ export default function CustomizeBar() {
     }
 
     return (
-        <div className="flex items-center justify-center bg-accent rounded-lg mx-auto">
+        <div className="flex items-center justify-center bg-accent rounded-lg mx-auto h-full">
             <div className="flex items-center justify-center gap-4">
                 <div>
                     <Button 

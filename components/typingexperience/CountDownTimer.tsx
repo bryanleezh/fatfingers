@@ -44,7 +44,7 @@ export default function CountDownTimer({ gameStart, onTimeUp} : CountDownTimerPr
     }, [gameStart, time]);
 
     return (
-        <div>
+        <div className="flex items-center justify-center h-full">
             <span className="text-primary font-mono break-all text-xl">{countdown}</span>
         </div>
 
