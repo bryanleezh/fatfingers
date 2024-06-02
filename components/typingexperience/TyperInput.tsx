@@ -7,10 +7,12 @@ import Input from "./Input";
 import ResetGame from "./ResetGame";
 import { useGameStateStore } from "@/store/gameState";
 import useKeyPressListener from "@/hooks/useKeyPressListener";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import CountDownTimer from "./CountDownTimer";
 
 export default function TyperInput() {
+    const [fadeClass, setFadeClass] = useState<string>('fade fade-out'); 
+    // Settings store
     const time = useSettingsStore((state) => state.time);
     const mode = useSettingsStore((state) => state.mode);
     const resetKey = useSettingsStore((state) => state.resetKey);
@@ -31,8 +33,6 @@ export default function TyperInput() {
     const word = "provided pish aboard without helpless crisp and exactly escalator yippee behind ack vector misconceive unabashedly per steep once gadzooks sight mmm throughout longingly vice appropriate versus desire plastic hm eek";
     const [userInput, setUserInput] = useState("");
     
-    // TODO: Add timer countdown component
-
     // TODO: Add reset game state, which would regenerate a new word string to be typed
     const resetGame = () => {
         console.log("game reset");
@@ -79,6 +79,13 @@ export default function TyperInput() {
     // Listener for keyboard events
     useKeyPressListener({ isFocused, resetKey, onKeyPress: handleKeyPress });
 
+    useEffect(() => {
+        if (gameStart) {
+            setFadeClass('fade'); // Apply fade-in class when game starts
+        } else {
+            setFadeClass('fade fade-out'); // Apply fade-out class when game stops
+        }
+    }, [gameStart]);
 
     // TODO: Add font theming
     // TODO: Add smooth cursor to input
@@ -86,7 +93,9 @@ export default function TyperInput() {
     // TODO: Add scoring logic
     return (
         <div className="w-full h-full mx-auto flex flex-col items-center justify-center max-w-5xl gap-4 px-4 xl:px-0">
-            <CountDownTimer gameStart={gameStart} onTimeUp={gameComplete} />
+            <div className={`${fadeClass}`}>
+                <CountDownTimer gameStart={gameStart} onTimeUp={gameComplete} />
+            </div>
             <TextWrapper>
                 <TextContainer word={word}/>
                 <Input userInput={userInput} word={word} />
