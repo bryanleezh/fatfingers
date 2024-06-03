@@ -2,13 +2,13 @@ import { useMemo } from "react"
 import Character from "./Character";
 
 type TextContainerProps = {
-    word: string
+    para: string
 };
 
-export default function TextContainer( {word} : TextContainerProps ) {
+export default function TextContainer( {para} : TextContainerProps ) {
     const gameText = useMemo(() => {
-        return word.split('');
-    }, [word]);
+        return para.split('');
+    }, [para]);
 
     return (
         <div className="relative left-0 top-0 break-all text-2xl opacity-60">
