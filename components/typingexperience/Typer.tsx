@@ -3,8 +3,6 @@
 import { useGameStateStore } from "@/store/gameState";
 import CustomizeBar from "./CustomizeBar";
 import TyperInput from "./TyperInput";
-import { useSettingsStore } from "@/store/settings";
-import CountDownTimer from "./CountDownTimer";
 import { useEffect, useState } from "react";
 
 // TODO: Add conditional for game start to replace CustomizeBar with timer
