@@ -9,6 +9,8 @@ import { useGameStateStore } from "@/store/gameState";
 import useKeyPressListener from "@/hooks/useKeyPressListener";
 import { useCallback, useEffect, useState } from "react";
 import CountDownTimer from "./CountDownTimer";
+import generateWord from "@/utils/generateWord";
+import MainResults from "../results/MainResults";
 
 export default function TyperInput() {
     const [fadeClass, setFadeClass] = useState<string>('fade fade-out'); 
@@ -29,14 +31,18 @@ export default function TyperInput() {
     const setDecreaseCursor = useGameStateStore((state) => state.setDecreaseCursor);
     const setResetCursor = useGameStateStore((state) => state.setResetCursor);  
 
-    // TODO: Add generate word function with mode as param
-    const word = "provided pish aboard without helpless crisp and exactly escalator yippee behind ack vector misconceive unabashedly per steep once gadzooks sight mmm throughout longingly vice appropriate versus desire plastic hm eek";
-    const [userInput, setUserInput] = useState("");
+    // typing module
+    const [para, setPara] = useState<string>(""); 
+    const [userInput, setUserInput] = useState<string>("");
     
-    // TODO: Add reset game state, which would regenerate a new word string to be typed
+    useEffect(() => {
+        setPara(generateWord(30));
+    }, []);
+
     const resetGame = () => {
         console.log("game reset");
         setUserInput("");
+        setPara(generateWord(30));
         setResetCursor();
         setGameStart(false);
     };
@@ -81,9 +87,9 @@ export default function TyperInput() {
 
     useEffect(() => {
         if (gameStart) {
-            setFadeClass('fade'); // Apply fade-in class when game starts
+            setFadeClass('fade');
         } else {
-            setFadeClass('fade fade-out'); // Apply fade-out class when game stops
+            setFadeClass('fade fade-out');
         }
     }, [gameStart]);
 
@@ -91,16 +97,19 @@ export default function TyperInput() {
     // TODO: Add smooth cursor to input
     // TODO: Add separate cursor with smooth logic
     // TODO: Add scoring logic
+    // TODO: Add instructions on reset key and command popup shortcut
+    // TODO: On complete of all words, need to generate new set of words for para
     return (
         <div className="w-full h-full mx-auto flex flex-col items-center justify-center max-w-5xl gap-4 px-4 xl:px-0">
             <div className={`${fadeClass}`}>
                 <CountDownTimer gameStart={gameStart} onTimeUp={gameComplete} />
             </div>
             <TextWrapper>
-                <TextContainer word={word}/>
-                <Input userInput={userInput} word={word} />
+                <TextContainer para={para}/>
+                <Input userInput={userInput} para={para} />
                 <ResetGame reset={resetGame} />
             </TextWrapper>
+            <MainResults userInput={userInput} para={para}/>
         </div>
     )
 };
