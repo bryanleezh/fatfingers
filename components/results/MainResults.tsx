@@ -3,13 +3,15 @@ import { useSettingsStore } from "@/store/settings";
 import consolidateResults from "@/utils/consolidateResults";
 import { Card } from "../ui/card";
 import CustomBadge from "./CustomBadge";
+import ResetGame from "../typingexperience/ResetGame";
 
 type MainResultsProps = {
     userInput: string;
     para: string;
+    onRestartGame: () => void;
 }
 
-export default function MainResults({ userInput, para }: MainResultsProps) {
+export default function MainResults({ userInput, para, onRestartGame }: MainResultsProps) {
     const time = useSettingsStore((state) => state.time);
     
     // Previous results
@@ -46,10 +48,10 @@ export default function MainResults({ userInput, para }: MainResultsProps) {
     
     // Returns the amount used in CustomBadge component
     const compareAmount = (prevAmount: number, newAmount: number) => {
-        return Math.abs(prevAmount - newAmount);
+        return parseFloat(Math.abs(prevAmount - newAmount).toFixed(1));
     };
 
-    // Returns positive/negative used in CustomBadge component
+    // Returns positive/negative/neutral used in CustomBadge component
     const compareSign = (prevAmount: number, newAmount: number) => {
         if (prevAmount > newAmount) {
             return "negative";
@@ -59,6 +61,23 @@ export default function MainResults({ userInput, para }: MainResultsProps) {
             return "neutral";
         }
     };
+
+    // sets all stats into state
+    const setAllStats = () => {
+        setRightChars(rightChars);
+        setWrongChars(wrongChars);
+        setAccuracy(accuracy);
+        setErrorPercentage(errorPercentage);
+        setNetwpm(netwpm);
+        setCpm(cpm);
+        console.log("stats set");
+    }
+
+    // TODO: Add all new results into state to store for use for the next result
+    const restartGame = () => {
+        onRestartGame();
+        setAllStats();
+    }
 
     return (
         <Card className="bg-card p-6 max-w-4xl mx-auto rounded-lg shadow-lg">
@@ -104,12 +123,15 @@ export default function MainResults({ userInput, para }: MainResultsProps) {
                 </div>
                 <div className="bg-muted p-4 rounded-lg">
                     <div className="text-gray-500 dark:text-gray-400 mb-1 font-mono">error</div>
-                    <div className="text-xl font-mono font-bold">{validErrorPercentage}</div>
+                    <div className="text-xl font-mono font-bold">{validErrorPercentage}%</div>
                     <div className="flex items-center justify-between mt-2">
                         <span className="text-sm text-gray-400 dark:text-gray-500">{validPrevErrorPercentage}%</span>
                         <CustomBadge sign={compareSign(validPrevErrorPercentage, validErrorPercentage)} amount={compareAmount(validPrevErrorPercentage, validErrorPercentage)} />
                     </div>
                 </div>
+            </div>
+            <div className="flex justify-center items-center mt-4">
+                <ResetGame reset={restartGame} />
             </div>
         </Card>
     )
