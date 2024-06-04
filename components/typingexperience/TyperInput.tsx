@@ -13,7 +13,8 @@ import generateWord from "@/utils/generateWord";
 import MainResults from "../results/MainResults";
 
 export default function TyperInput() {
-    const [fadeClass, setFadeClass] = useState<string>('fade fade-out'); 
+    const [fadeClass, setFadeClass] = useState<string>('fade fade-out');
+    
     // Settings store
     const time = useSettingsStore((state) => state.time);
     const mode = useSettingsStore((state) => state.mode);
@@ -25,6 +26,7 @@ export default function TyperInput() {
     const gameStart = useGameStateStore((state) => state.gameStart);
     const endGame = useGameStateStore((state) => state.endGame);
     const cursor = useGameStateStore((state) => state.cursor);
+    const setFocused = useGameStateStore((state) => state.setFocused);
     const setGameStart = useGameStateStore((state) => state.setGameStart);
     const setEndGame = useGameStateStore((state) => state.setEndGame);
     const setIncreaseCursor = useGameStateStore((state) => state.setIncreaseCursor);
@@ -50,11 +52,19 @@ export default function TyperInput() {
     // ! this function can just be to setendgame to display the results, the rest of the results can be calculated,retrieved and then set from there
     const gameComplete = () => {
         // flag for game state
+        setFocused(false);
         setGameStart(false);
         console.log("show results");
         // flag for showing results 
         setEndGame(true);
     };
+
+    // function to close results component
+    const resultsClose = () => {
+        console.log("close results");
+        resetGame();
+        setEndGame(false);
+    }
 
     const handleKeyPress = useCallback((key: string) => {
         if (gameStart) {
@@ -78,13 +88,10 @@ export default function TyperInput() {
         }
     }, [resetKey, resetGame, setIncreaseCursor, setDecreaseCursor]);
     
-    // TODO: Add setting of scoring
-
-    // TODO: Create custom caret
-
+    
     // Listener for keyboard events
     useKeyPressListener({ isFocused, resetKey, onKeyPress: handleKeyPress });
-
+    
     useEffect(() => {
         if (gameStart) {
             setFadeClass('fade');
@@ -92,24 +99,29 @@ export default function TyperInput() {
             setFadeClass('fade fade-out');
         }
     }, [gameStart]);
-
+    
+    // TODO: Create custom caret
     // TODO: Add font theming
     // TODO: Add smooth cursor to input
     // TODO: Add separate cursor with smooth logic
-    // TODO: Add scoring logic
     // TODO: Add instructions on reset key and command popup shortcut
     // TODO: On complete of all words, need to generate new set of words for para
     return (
         <div className="w-full h-full mx-auto flex flex-col items-center justify-center max-w-5xl gap-4 px-4 xl:px-0">
-            <div className={`${fadeClass}`}>
-                <CountDownTimer gameStart={gameStart} onTimeUp={gameComplete} />
-            </div>
-            <TextWrapper>
-                <TextContainer para={para}/>
-                <Input userInput={userInput} para={para} />
-                <ResetGame reset={resetGame} />
-            </TextWrapper>
-            <MainResults userInput={userInput} para={para}/>
+            {endGame ? 
+                <MainResults userInput={userInput} para={para} onRestartGame={resultsClose}/>
+                :   
+                <>
+                    <div className={`${fadeClass}`}>
+                        <CountDownTimer gameStart={gameStart} onTimeUp={gameComplete} />
+                    </div>
+                    <TextWrapper>
+                        <TextContainer para={para}/>
+                        <Input userInput={userInput} para={para} />
+                        <ResetGame reset={resetGame} />
+                    </TextWrapper>
+                </> 
+            }
         </div>
     )
 };
