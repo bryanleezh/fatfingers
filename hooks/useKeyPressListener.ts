@@ -11,7 +11,7 @@ export default function useKeyPressListener( { isFocused, resetKey, onKeyPress }
     const key = event.key;
 
     const isAlphanumeric = /^[a-zA-Z0-9]$/.test(key);
-    if (isAlphanumeric || key === "Backspace" || key === resetKey || key === " ") {
+    if (isAlphanumeric || key === "Backspace" || key === "-" || key === resetKey || key === " ") {
       onKeyPress(key);
     }
   }, [onKeyPress, resetKey]);
