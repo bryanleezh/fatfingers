@@ -7,6 +7,7 @@ import { useSettingsStore } from "@/store/settings"
 
 export default function CustomizeBar() {
     const times: number[] = [15, 30, 60, 120];
+    const words: number[] = [15, 30, 60, 120];
     const time = useSettingsStore((state) => state.time);
     const mode = useSettingsStore((state) => state.mode);
     const setTime = useSettingsStore((state) => state.setTime);
@@ -42,18 +43,34 @@ export default function CustomizeBar() {
                     </Button>
                 </div>
                 <Separator orientation="vertical" className="h-6 w-0.5 bg-muted-foreground"/>
-                <div>
-                    {times.map((t) => (
-                        <Button
-                            key={t}
-                            variant="texthighlight"
-                            active={time === t}
-                            onClick={() => handleTimeChange(t)}
-                        >
-                            {t}
-                        </Button>
-                    ))}
-                </div>
+                {mode === "time" && 
+                    <div>
+                        {times.map((t) => (
+                            <Button
+                                key={t}
+                                variant="texthighlight"
+                                active={time === t}
+                                onClick={() => handleTimeChange(t)}
+                            >
+                                {t}
+                            </Button>
+                        ))}
+                    </div>
+                }
+                {mode === "words" &&
+                    <div>
+                        {words.map((t) => (
+                            <Button
+                                key={t}
+                                variant="texthighlight"
+                                active={time === t}
+                                onClick={() => handleTimeChange(t)}
+                            >
+                                {t}
+                            </Button>
+                        ))}
+                    </div>
+                }
             </div>
         </div>
     )
