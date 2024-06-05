@@ -14,6 +14,8 @@ import MainResults from "../results/MainResults";
 
 export default function TyperInput() {
     const [fadeClass, setFadeClass] = useState<string>('fade fade-out');
+    const [inputFadeClass, setInputFadeClass] = useState<string>('fade');
+    const [resultsFadeClass, setResultsFadeClass] = useState<string>('fade fade-out');
     
     // Settings store
     const time = useSettingsStore((state) => state.time);
@@ -55,15 +57,24 @@ export default function TyperInput() {
         setFocused(false);
         setGameStart(false);
         console.log("show results");
-        // flag for showing results 
-        setEndGame(true);
+        setFadeClass("fade fade-out");
+        setInputFadeClass("fade fade-out");
+        setTimeout(() => {
+            setEndGame(true);
+            setResultsFadeClass('fade');
+        }, 500);
     };
 
     // function to close results component
     const resultsClose = () => {
         console.log("close results");
-        resetGame();
-        setEndGame(false);
+        setResultsFadeClass("fade fade-out");
+        setInputFadeClass("fade");
+        setTimeout(() => {
+            setFadeClass('fade fade-out');
+            resetGame();
+            setEndGame(false);
+        }, 500); 
     }
 
     const handleKeyPress = useCallback((key: string) => {
@@ -109,9 +120,11 @@ export default function TyperInput() {
     return (
         <div className="w-full h-full mx-auto flex flex-col items-center justify-center max-w-5xl gap-4 px-4 xl:px-0">
             {endGame ? 
-                <MainResults userInput={userInput} para={para} onRestartGame={resultsClose}/>
+                <div className={`${resultsFadeClass}`}>
+                    <MainResults userInput={userInput} para={para} onRestartGame={resultsClose}/>
+                </div>
                 :   
-                <>
+                <div className={`${inputFadeClass}`}>
                     <div className={`${fadeClass}`}>
                         <CountDownTimer gameStart={gameStart} onTimeUp={gameComplete} />
                     </div>
@@ -120,7 +133,7 @@ export default function TyperInput() {
                         <Input userInput={userInput} para={para} />
                         <ResetGame reset={resetGame} />
                     </TextWrapper>
-                </> 
+                </div> 
             }
         </div>
     )
