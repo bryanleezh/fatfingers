@@ -13,8 +13,8 @@ import {
 } from "@/components/ui/dropdown-menu"
 
 export default function ThemeToggles() {
-    const { theme, setTheme, themes } = useTheme();
     const [ mounted, setMounted ] = React.useState(false);
+    const { setTheme, themes } = useTheme();
 
     // can remove to prevent slow loading
     React.useEffect(() => {
@@ -35,13 +35,10 @@ export default function ThemeToggles() {
                 </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-                {themes.map(theme => (
-                    <DropdownMenuItem 
-                        key={theme} 
-                        onClick={() => setTheme(theme)}
-                    >
-                        {theme}
-                    </DropdownMenuItem>    
+                {themes.map((themeOption) => (
+                    <DropdownMenuItem key={themeOption} onClick={() => setTheme(themeOption)}>
+                        {themeOption}
+                    </DropdownMenuItem>
                 ))}
             </DropdownMenuContent>
         </DropdownMenu>

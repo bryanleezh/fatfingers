@@ -16,15 +16,15 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
     <ViewTransitions>
       <html lang="en" suppressHydrationWarning>
         <body className="h-screen flex flex-col">
           <ThemeProvider 
-            attribute="class" 
+            attribute="class"
             defaultTheme="light"
             enableSystem={false}
             disableTransitionOnChange
