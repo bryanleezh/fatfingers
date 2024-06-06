@@ -4,6 +4,7 @@ import { useGameStateStore } from "@/store/gameState";
 import CustomizeBar from "./CustomizeBar";
 import TyperInput from "./TyperInput";
 import { useEffect, useState } from "react";
+import Commands from "./Commands";
 
 // TODO: Add conditional for game start to replace CustomizeBar with timer
 export default function Typer() {
@@ -28,6 +29,11 @@ export default function Typer() {
             </div>
             <div className="flex flex-grow items-center justify-center w-full">
                 <TyperInput />
+            </div>
+            <div className="w-full flex items-center justify-center">
+                <div className={`fade ${fadeClass}`}>
+                    <Commands />
+                </div>
             </div>
         </div>
     )
