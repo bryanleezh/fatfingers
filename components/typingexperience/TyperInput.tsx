@@ -101,8 +101,9 @@ export default function TyperInput() {
     
     const updateLineCharsNum = () => {
         if (textContainerRef.current) {
-            const charWidth = 14; // Adjust this value based on your character width
+            const charWidth = 14.5;
             const containerWidth = textContainerRef.current.offsetWidth;
+            console.log(Math.floor(containerWidth / charWidth));
             setLineCharsNum(Math.floor(containerWidth / charWidth));
         }
     };

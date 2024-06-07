@@ -6,7 +6,7 @@ type CustomCaretProps = {
 };
 
 export default function CustomCaret({ left, top } : CustomCaretProps) {
-    const characterWidth = 14;
+    const characterWidth = 14.5;
     const characterHeight = 32;
 
     return (
