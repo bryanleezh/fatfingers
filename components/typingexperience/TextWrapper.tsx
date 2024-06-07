@@ -6,16 +6,19 @@ type TextWrapperProps = {
 };
 
 export default function TextWrapper( {children}: TextWrapperProps ) {
-    const isFocused = useGameStateStore((state) => state.isFocused); 
+    const isFocused = useGameStateStore((state) => state.isFocused);
     const setFocused = useGameStateStore((state) => state.setFocused);
+    const setGameStart = useGameStateStore((state) => state.setGameStart);
 
     const handleFocus = () => {
         setFocused(true);
         console.log('focused');
     };
 
+    // TODO: Reset game when blurred
     const handleBlur = () => {
         setFocused(false);
+        setGameStart(false);
         console.log('Blurred');
     }
 
@@ -33,8 +36,6 @@ export default function TextWrapper( {children}: TextWrapperProps ) {
                     isFocused ? 'blur-none' : 'cursor-pointer blur-md'
                 }`}
                 tabIndex={0}
-                // onFocus={() => setFocused(true)}
-                // onBlur={() => setFocused(false)}
                 onFocus={handleFocus}
                 onBlur={handleBlur}
             >

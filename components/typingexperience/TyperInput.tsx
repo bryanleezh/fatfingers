@@ -50,6 +50,7 @@ export default function TyperInput() {
         setUserInput("");
         setPara(generateWord(30));
         setResetCursor();
+        setInputLine(0);
         setGameStart(false);
     };
     
@@ -103,7 +104,6 @@ export default function TyperInput() {
         if (textContainerRef.current) {
             const charWidth = 14.5;
             const containerWidth = textContainerRef.current.offsetWidth;
-            console.log(Math.floor(containerWidth / charWidth));
             setLineCharsNum(Math.floor(containerWidth / charWidth));
         }
     };
@@ -136,18 +136,18 @@ export default function TyperInput() {
 
 
     useEffect(() => {
-        // TODO: Figure out how to calculate width of text container
-        // TODO: Reset customcaret left to 0
-        // TODO: Add regenerate para function here
-        // TODO: Store the prev input + para so that more can be typed
         if (cursor >= lineCharsNum && lineCharsNum >= 0) {
             setInputLine((prev) => prev + 1);
             setResetCursor();
         };
+        if (userInput.length === para.length) {            
+            // TODO: Add regenerate para function here
+            // TODO: Store the prev input + para so that more can be typed
+            console.log("generate new words");
+        }
     }, [cursor, lineCharsNum]);
     
     // TODO: Add font theming
-    // TODO: On complete of all words, need to generate new set of words for para
     return (
         <div className="w-full h-full mx-auto flex flex-col items-center justify-center max-w-5xl gap-4 px-4 xl:px-0">
             {endGame ? 
