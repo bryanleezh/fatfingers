@@ -3,23 +3,23 @@ import { ScanEye } from "lucide-react";
 
 type TextWrapperProps = {
   children: React.ReactNode;
+  reset: () => void; 
 };
 
-export default function TextWrapper( {children}: TextWrapperProps ) {
+export default function TextWrapper( {children, reset}: TextWrapperProps ) {
     const isFocused = useGameStateStore((state) => state.isFocused);
     const setFocused = useGameStateStore((state) => state.setFocused);
     const setGameStart = useGameStateStore((state) => state.setGameStart);
 
     const handleFocus = () => {
         setFocused(true);
-        console.log('focused');
     };
 
     // TODO: Reset game when blurred
     const handleBlur = () => {
         setFocused(false);
         setGameStart(false);
-        console.log('Blurred');
+        reset();
     }
 
     return (
