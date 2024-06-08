@@ -33,14 +33,14 @@ export default function CustomizeBar() {
                         <Timer className="w-4 h-4"/>
                         <span className="pl-2">time</span>
                     </Button>
-                    <Button 
+                    {/* <Button 
                         variant="texthighlight"
                         active={mode === 'words'}
                         onClick={() => handleModeChange('words')}
                     >
                         <WholeWord className="w-4 h-4"/>
                         <span className="pl-2">words</span>
-                    </Button>
+                    </Button> */}
                 </div>
                 <Separator orientation="vertical" className="h-6 w-0.5 bg-muted-foreground"/>
                 {mode === "time" && 
@@ -57,7 +57,7 @@ export default function CustomizeBar() {
                         ))}
                     </div>
                 }
-                {mode === "words" &&
+                {/* {mode === "words" &&
                     <div>
                         {words.map((t) => (
                             <Button
@@ -70,7 +70,7 @@ export default function CustomizeBar() {
                             </Button>
                         ))}
                     </div>
-                }
+                } */}
             </div>
         </div>
     )
