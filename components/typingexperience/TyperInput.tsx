@@ -41,6 +41,8 @@ export default function TyperInput() {
     // typing module
     const [para, setPara] = useState<string>(""); 
     const [userInput, setUserInput] = useState<string>("");
+    const [finalPara, setFinalPara] = useState<string>("");
+    const [finalUserInput, setFinalUserInput] = useState<string>("");
     
     useEffect(() => {
         setPara(generateWord(30));
@@ -54,20 +56,22 @@ export default function TyperInput() {
         setGameStart(false);
     };
     
-    // ! this function can just be to setendgame to display the results, the rest of the results can be calculated,retrieved and then set from there
+    // this function can just be to setendgame to display the results, the rest of the results can be calculated, retrieved and then set from there
     const gameComplete = () => {
-        // flag for game state
         setFocused(false);
         setGameStart(false);
         setFadeClass("fade fade-out");
         setInputFadeClass("fade fade-out");
+        // add current para + input to final to consolidate results
+        setFinalPara((prev) => prev + para);
+        setFinalUserInput((prev) => prev + userInput);
         setTimeout(() => {
             setEndGame(true);
             setResultsFadeClass('fade');
         }, 500);
     };
 
-    // function to close results component
+    // Close results component
     const resultsClose = () => {
         setResultsFadeClass("fade fade-out");
         setInputFadeClass("fade");
@@ -141,9 +145,12 @@ export default function TyperInput() {
             setResetCursor();
         };
         if (userInput.length === para.length) {            
-            // TODO: Add regenerate para function here
-            // TODO: Store the prev input + para so that more can be typed
-            console.log("generate new words");
+            setFinalPara((prev) => prev + para);
+            setFinalUserInput((prev) => prev + userInput);
+            setUserInput("");
+            setPara(generateWord(30));
+            setResetCursor();
+            setInputLine(0);
         }
     }, [cursor, lineCharsNum]);
     
@@ -152,14 +159,14 @@ export default function TyperInput() {
         <div className="w-full h-full mx-auto flex flex-col items-center justify-center max-w-5xl gap-4 px-4 xl:px-0">
             {endGame ? 
                 <div className={`${resultsFadeClass}`}>
-                    <MainResults userInput={userInput} para={para} onRestartGame={resultsClose}/>
+                    <MainResults userInput={finalUserInput} para={finalPara} onRestartGame={resultsClose}/>
                 </div>
                 :   
                 <div className={`${inputFadeClass}`} ref={textContainerRef}>
                     <div className={`${fadeClass}`}>
                         <CountDownTimer gameStart={gameStart} onTimeUp={gameComplete} />
                     </div>
-                    <TextWrapper>
+                    <TextWrapper reset={resetGame}>
                         <TextContainer para={para}/>
                         <Input userInput={userInput} para={para} />
                         <CustomCaret left={cursor} top={inputLine}/>

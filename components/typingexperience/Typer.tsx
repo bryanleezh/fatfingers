@@ -6,7 +6,6 @@ import TyperInput from "./TyperInput";
 import { useEffect, useState } from "react";
 import Commands from "./Commands";
 
-// TODO: Add conditional for game start to replace CustomizeBar with timer
 export default function Typer() {
     const [fadeClass, setFadeClass] = useState<string>(''); 
     const gameStart = useGameStateStore((state) => state.gameStart);
