@@ -2,8 +2,9 @@
 
 import { Button } from "@/components/ui/button"
 import { Timer, WholeWord } from "lucide-react"
-import { Separator } from "../ui/separator"
+import { Separator } from "../../ui/separator"
 import { useSettingsStore } from "@/store/settings"
+import { WordsMode } from "./WordsMode";
 
 export default function CustomizeBar() {
     const times: number[] = [15, 30, 60, 120];
@@ -33,6 +34,7 @@ export default function CustomizeBar() {
                         <Timer className="w-4 h-4"/>
                         <span className="pl-2">time</span>
                     </Button>
+                    <WordsMode />
                     {/* <Button 
                         variant="texthighlight"
                         active={mode === 'words'}

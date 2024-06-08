@@ -1,7 +1,7 @@
 'use client';
 
 import { useGameStateStore } from "@/store/gameState";
-import CustomizeBar from "./CustomizeBar";
+import CustomizeBar from "./Customization/CustomizeBar";
 import TyperInput from "./TyperInput";
 import { useEffect, useState } from "react";
 import Commands from "./Commands";
