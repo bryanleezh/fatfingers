@@ -13,7 +13,7 @@ type MainResultsProps = {
 
 export default function MainResults({ userInput, para, onRestartGame }: MainResultsProps) {
     const time = useSettingsStore((state) => state.time);
-    
+
     // Previous results
     const prevRightChars = useGameStateStore((state) => state.rightChars);
     const prevWrongChars = useGameStateStore((state) => state.wrongChars)
