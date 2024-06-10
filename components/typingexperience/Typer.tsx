@@ -4,7 +4,7 @@ import { useGameStateStore } from "@/store/gameState";
 import CustomizeBar from "./Customization/CustomizeBar";
 import TyperInput from "./TyperInput";
 import { useEffect, useState } from "react";
-import Commands from "./Commands";
+import Commands from "./Customization/Commands";
 
 export default function Typer() {
     const [fadeClass, setFadeClass] = useState<string>(''); 

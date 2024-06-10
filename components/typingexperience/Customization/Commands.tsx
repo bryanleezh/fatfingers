@@ -62,9 +62,9 @@ export default function Commands() {
                 </kbd>
             </p>
             <CommandDialog open={open} onOpenChange={setOpen}>
-                <CommandInput placeholder="Type a command or search..." />
+                {/* <CommandInput placeholder="Type a command or search..." /> */}
                 <CommandList>
-                    <CommandEmpty>No results found.</CommandEmpty>
+                    {/* <CommandEmpty>No results found.</CommandEmpty>
                     <CommandGroup heading="Suggestions">
                         <CommandItem>
                             <Calendar className="mr-2 h-4 w-4" />
@@ -78,8 +78,8 @@ export default function Commands() {
                             <Calculator className="mr-2 h-4 w-4" />
                             <span>Calculator</span>
                         </CommandItem>
-                    </CommandGroup>
-                    <CommandSeparator />
+                    </CommandGroup> */}
+                    {/* <CommandSeparator /> */}
                     <CommandGroup heading="Settings">
                         <CommandItem>
                             <ListRestart className="mr-2 h-4 w-4" />
@@ -109,11 +109,11 @@ export default function Commands() {
                                 </ToggleGroup>
                             </CommandShortcut>
                         </CommandItem>
-                        <CommandItem>
-                        <CreditCard className="mr-2 h-4 w-4" />
+                        {/* <CommandItem>
+                            <CreditCard className="mr-2 h-4 w-4" />
                             <span>Billing</span>
                             <CommandShortcut>⌘B</CommandShortcut>
-                        </CommandItem>
+                        </CommandItem> */}
                     </CommandGroup>
                 </CommandList>
             </CommandDialog>

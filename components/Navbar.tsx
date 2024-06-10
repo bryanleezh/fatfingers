@@ -18,12 +18,12 @@ export default function Navbar() {
                 <Keyboard className="h-5 w-5" />
                 <span className="sr-only">Keyboard</span>
             </Link>
-            <Link className="inline-flex h-10 w-10 items-center justify-center rounded-full" href="/info">
+            {/* <Link className="inline-flex h-10 w-10 items-center justify-center rounded-full" href="/info">
                 <Info className="h-5 w-5" />
                 <span className="sr-only">Information</span>
-            </Link>
+            </Link> */}
             <ThemeToggles />
-            <Link className="inline-flex h-10 w-10 items-center justify-center rounded-full" href="settings">
+            {/* <Link className="inline-flex h-10 w-10 items-center justify-center rounded-full" href="settings">
                 <Settings className="h-5 w-5" />
                 <span className="sr-only">Settings</span>
             </Link>
@@ -46,7 +46,7 @@ export default function Navbar() {
                         <Link href="#">Logout</Link>
                     </DropdownMenuItem>
                 </DropdownMenuContent>
-            </DropdownMenu>
+            </DropdownMenu> */}
         </div>
     </header>
   )
