@@ -3,10 +3,10 @@ import React from 'react';
 type CustomCaretProps = {
     left: number;
     top: number;
+    characterWidth: number;
 };
 
-export default function CustomCaret({ left, top } : CustomCaretProps) {
-    const characterWidth = 14.5;
+export default function CustomCaret({ left, top, characterWidth } : CustomCaretProps) {
     const characterHeight = 32;
 
     return (

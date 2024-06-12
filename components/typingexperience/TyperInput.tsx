@@ -18,6 +18,7 @@ export default function TyperInput() {
     const [inputFadeClass, setInputFadeClass] = useState<string>('fade');
     const [resultsFadeClass, setResultsFadeClass] = useState<string>('fade fade-out');
     const textContainerRef = useRef<HTMLHeadingElement>(null);
+    const [characterWidth, setCharacterWidth] = useState<number>(0);
     const [lineCharsNum, setLineCharsNum] = useState<number>(-1);
     const [inputLine, setInputLine] = useState<number>(0);
 
@@ -104,9 +105,17 @@ export default function TyperInput() {
         }
     }, [resetKey, resetGame, setIncreaseCursor, setDecreaseCursor]);
     
+    const calculateCharacterWidth = () => {
+        const hiddenSpan = document.getElementById('hidden-measure');
+        if (!hiddenSpan) return 0;
+        const width = hiddenSpan.getBoundingClientRect().width;
+        setCharacterWidth(width);
+        return width;
+    };
+
     const updateLineCharsNum = () => {
         if (textContainerRef.current) {
-            const charWidth = 14.5;
+            const charWidth = calculateCharacterWidth();
             const containerWidth = textContainerRef.current.offsetWidth;
             setLineCharsNum(Math.floor(containerWidth / charWidth));
         }
@@ -169,7 +178,7 @@ export default function TyperInput() {
                     <TextWrapper reset={resetGame}>
                         <TextContainer para={para}/>
                         <Input userInput={userInput} para={para} />
-                        <CustomCaret left={cursor} top={inputLine}/>
+                        <CustomCaret left={cursor} top={inputLine} characterWidth={characterWidth}/>
                         <ResetGame reset={resetGame} />
                     </TextWrapper>
                 </div> 
