@@ -23,8 +23,6 @@ export default function TyperInput() {
     const [inputLine, setInputLine] = useState<number>(0);
 
     // Settings store
-    const time = useSettingsStore((state) => state.time);
-    const mode = useSettingsStore((state) => state.mode);
     const resetKey = useSettingsStore((state) => state.resetKey);
     
     // Gamestate store
@@ -35,6 +33,7 @@ export default function TyperInput() {
     const setFocused = useGameStateStore((state) => state.setFocused);
     const setGameStart = useGameStateStore((state) => state.setGameStart);
     const setEndGame = useGameStateStore((state) => state.setEndGame);
+    const setCursor = useGameStateStore((state) => state.setCursor);
     const setIncreaseCursor = useGameStateStore((state) => state.setIncreaseCursor);
     const setDecreaseCursor = useGameStateStore((state) => state.setDecreaseCursor);
     const setResetCursor = useGameStateStore((state) => state.setResetCursor);  
@@ -88,6 +87,10 @@ export default function TyperInput() {
             if (key === "Backspace") {
                 setUserInput((prev) => prev.slice(0,-1));
                 setDecreaseCursor();
+            if (cursor === 0) {
+                setCursor(lineCharsNum - 1);
+                setInputLine((prev) => prev - 1);
+            }
             } else if (key === resetKey) {
                 resetGame();
             } else {
