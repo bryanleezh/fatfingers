@@ -7,9 +7,9 @@ export default class Server implements Party.Server {
     // A websocket just connected!
     console.log(
       `Connected:
-        id: ${conn.id}
-        room: ${this.room.id}
-        url: ${new URL(ctx.request.url).pathname}`
+  id: ${conn.id}
+  room: ${this.room.id}
+  url: ${new URL(ctx.request.url).pathname}`
     );
 
     // let's send a message to the connection
