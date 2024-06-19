@@ -12,7 +12,6 @@ export default function Room() {
         if (pathname) {
             const urlSplit = pathname.split("/");
             const id = urlSplit[urlSplit.length - 1];
-            console.log(id);
             setRoomId(id);
         }
     }, [pathname]);
@@ -22,10 +21,7 @@ export default function Room() {
     }
 
     return (
-        <div>
-            <RoomSocket roomId={roomId} />
-            {/* Other UI components */}
-        </div>
+        <RoomSocket roomId={roomId} />
     );
 
 }
