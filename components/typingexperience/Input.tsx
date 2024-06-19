@@ -18,7 +18,7 @@ export default function Input( { userInput, para } : InputProps) {
         },
         [userInput, para]
     );
-    // implement keydown?
+
     return (
         <div className="absolute left-0 top-0 z-10 break-all text-2xl">
             {userInputs.map((char, index) => {

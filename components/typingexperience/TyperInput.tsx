@@ -39,7 +39,7 @@ export default function TyperInput() {
     const setResetCursor = useGameStateStore((state) => state.setResetCursor);  
 
     // typing module
-    const [para, setPara] = useState<string>(""); 
+    const [para, setPara] = useState<string>("");
     const [userInput, setUserInput] = useState<string>("");
     const [finalPara, setFinalPara] = useState<string>("");
     const [finalUserInput, setFinalUserInput] = useState<string>("");
