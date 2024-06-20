@@ -2,6 +2,7 @@ import usePartySocket from "partysocket/react";
 import { useState } from "react";
 import MainMultiplayer from "./MainMultiplayer";
 import { Button } from "../ui/button";
+import generateWord from "@/utils/generateWord";
 
 
 type RoomSocketProps = {
@@ -9,7 +10,7 @@ type RoomSocketProps = {
 }
 
 export default function RoomSocket( {roomId} : RoomSocketProps ) {
-    const [para, setPara] = useState<string>("");
+    const [para, setPara] = useState<string>(generateWord(30));
     const [progress, setProgress] = useState<number>(0);
 
     const ws = usePartySocket({

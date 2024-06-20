@@ -6,7 +6,6 @@ import TextContainer from "../typingexperience/TextContainer";
 import TextWrapper from "../typingexperience/TextWrapper";
 import { useGameStateStore } from "@/store/gameState";
 import useKeyPressListener from "@/hooks/useKeyPressListener";
-import generateWord from "@/utils/generateWord";
 
 type MainMultiplayerProps = {
     para: string,
@@ -14,7 +13,7 @@ type MainMultiplayerProps = {
 }
 
 export default function MainMultiplayer( {para, progress} : MainMultiplayerProps) {
-    const [userInput, setUserInput] = useState<string>(generateWord(30));
+    const [userInput, setUserInput] = useState<string>("");
     const textContainerRef = useRef<HTMLHeadingElement>(null);
     const [characterWidth, setCharacterWidth] = useState<number>(0);
     const [lineCharsNum, setLineCharsNum] = useState<number>(-1);
@@ -104,7 +103,7 @@ export default function MainMultiplayer( {para, progress} : MainMultiplayerProps
     return (
         <div className="w-full h-full mx-auto flex flex-col items-center justify-center max-w-5xl gap-4 px-4 xl:px-0">
             Core Multiplayer Module
-            <div>
+            <div ref={textContainerRef}>
                 <TextWrapper reset={resetGame} >
                     <TextContainer para={para} />
                     <Input userInput={userInput} para={para} />
