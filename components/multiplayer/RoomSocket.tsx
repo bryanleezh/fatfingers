@@ -3,15 +3,22 @@ import { useState } from "react";
 import MainMultiplayer from "./MainMultiplayer";
 import { Button } from "../ui/button";
 import generateWord from "@/utils/generateWord";
+import RaceProgressBar from "./RaceProgressBar";
 
 
 type RoomSocketProps = {
     roomId: string,
-}
+};
 
 export default function RoomSocket( {roomId} : RoomSocketProps ) {
     const [para, setPara] = useState<string>(generateWord(30));
     const [progress, setProgress] = useState<number>(0);
+    // const totalprogress = useState<[]>();
+    const totalprogress = [
+        { name: "Bryan", progress: 30 },
+        { name: "You", progress: 80 },
+        { name: "Me", progress: 90 },
+    ];
 
     const ws = usePartySocket({
         host: "localhost:1999", // or your PartyKit server URL
@@ -19,7 +26,8 @@ export default function RoomSocket( {roomId} : RoomSocketProps ) {
         onOpen() {
             console.log(`connected to room ${roomId}`);
         },
-        // TODO: On message will send message to server that game can start, game will generate a para down to all clients connected and set para for each client
+        // TODO: Add logic for setting number of clients connected
+        // TODO: Add message type that logs client joins room
         onMessage(e) {
             try {
                 const receivedMessage = JSON.parse(e.data);
@@ -27,7 +35,6 @@ export default function RoomSocket( {roomId} : RoomSocketProps ) {
                 if (receivedMessage.type === "welcome") {
                     console.log(receivedMessage.message);
                 } else {
-                    console.log(receivedMessage);
                     setPara(receivedMessage.message);
                 }
             } catch (err) {
@@ -53,6 +60,7 @@ export default function RoomSocket( {roomId} : RoomSocketProps ) {
         <div className="flex flex-col gap-4 w-3/4 flex-grow items-center justify-center">
             <p>Connected to room: {roomId}</p>
             <Button onClick={sendMessage}>Get Ready</Button>
+            <RaceProgressBar racers={totalprogress} />
             <MainMultiplayer para={para} progress={0} />
         </div>
     );

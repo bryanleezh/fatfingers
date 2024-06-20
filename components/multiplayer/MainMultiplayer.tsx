@@ -12,6 +12,9 @@ type MainMultiplayerProps = {
     progress: number,
 }
 
+// TODO: Add logic on when someone enter the room, it will set new racer in minimap
+// TODO: Add minimap for racers
+
 export default function MainMultiplayer( {para, progress} : MainMultiplayerProps) {
     const [userInput, setUserInput] = useState<string>("");
     const textContainerRef = useRef<HTMLHeadingElement>(null);
@@ -34,6 +37,7 @@ export default function MainMultiplayer( {para, progress} : MainMultiplayerProps
         setResetCursor();
     };
     
+    // TODO: Add logic to start the race
     const handleKeyPress = useCallback((key: string) => {
         if (gameStart) {
             if (key === "Backspace") {
@@ -102,7 +106,7 @@ export default function MainMultiplayer( {para, progress} : MainMultiplayerProps
 
     return (
         <div className="w-full h-full mx-auto flex flex-col items-center justify-center max-w-5xl gap-4 px-4 xl:px-0">
-            Core Multiplayer Module
+            {/* Core Multiplayer Module */}
             <div ref={textContainerRef}>
                 <TextWrapper reset={resetGame} >
                     <TextContainer para={para} />
