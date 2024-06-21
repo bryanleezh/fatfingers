@@ -1,11 +1,13 @@
 // TODO: Add race progress bar for each racer
 
+import displayPosition from "@/utils/displayPosition";
 import { Bike } from "lucide-react";
 
 type RaceProgressBarProps = {
   racers: {
     name: string;
     progress: number;
+    position?: number;
   }[];
 };
 
@@ -23,7 +25,11 @@ export default function RaceProgressBar({ racers }: RaceProgressBarProps) {
                     <Bike className="w-5 h-5 text-primary-foreground" />
                     </div>
                 </div>
-                <span className="text-sm font-medium">{racer.progress}%</span>
+                {racer.position !== undefined ? (
+                    <span className="text-sm font-medium">{displayPosition(racer.position)}</span>
+                ) : (
+                    <span className="text-sm font-medium">{`${racer.progress}%`}</span>
+                )}
                 </div>
             ))}
         </div>
