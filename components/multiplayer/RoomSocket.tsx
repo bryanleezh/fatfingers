@@ -17,8 +17,12 @@ export default function RoomSocket( {roomId} : RoomSocketProps ) {
     const totalprogress = [
         { name: "Bryan", progress: 30 },
         { name: "You", progress: 80 },
-        { name: "Me", progress: 90 },
+        { name: "Me", progress: 100, position: 1 },
     ];
+
+    const handleProgress = (progress: number) => {
+        setProgress(progress);
+    };
 
     const ws = usePartySocket({
         host: "localhost:1999", // or your PartyKit server URL
@@ -61,7 +65,7 @@ export default function RoomSocket( {roomId} : RoomSocketProps ) {
             <p>Connected to room: {roomId}</p>
             <Button onClick={sendMessage}>Get Ready</Button>
             <RaceProgressBar racers={totalprogress} />
-            <MainMultiplayer para={para} progress={0} />
+            <MainMultiplayer para={para} onProgress={handleProgress} />
         </div>
     );
 

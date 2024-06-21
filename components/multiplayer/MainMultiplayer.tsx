@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import CustomCaret from "../typingexperience/CustomCaret";
 import Input from "../typingexperience/Input";
-import ResetGame from "../typingexperience/ResetGame";
 import TextContainer from "../typingexperience/TextContainer";
 import TextWrapper from "../typingexperience/TextWrapper";
 import { useGameStateStore } from "@/store/gameState";
@@ -9,13 +8,13 @@ import useKeyPressListener from "@/hooks/useKeyPressListener";
 
 type MainMultiplayerProps = {
     para: string,
-    progress: number,
+    onProgress: (progress: number) => void;
 }
 
 // TODO: Add logic on when someone enter the room, it will set new racer in minimap
 // TODO: Add minimap for racers
 
-export default function MainMultiplayer( {para, progress} : MainMultiplayerProps) {
+export default function MainMultiplayer( {para, onProgress} : MainMultiplayerProps) {
     const [userInput, setUserInput] = useState<string>("");
     const textContainerRef = useRef<HTMLHeadingElement>(null);
     const [characterWidth, setCharacterWidth] = useState<number>(0);
@@ -35,6 +34,7 @@ export default function MainMultiplayer( {para, progress} : MainMultiplayerProps
     const resetGame = () => {
         setUserInput("");
         setResetCursor();
+        onProgress(0);
     };
     
     // TODO: Add logic to start the race
@@ -101,18 +101,22 @@ export default function MainMultiplayer( {para, progress} : MainMultiplayerProps
         };
         if (userInput.length === para.length) {            
             // TODO: Add logic to send to server complete para
+            console.log("Game complete!");
         }
     }, [cursor, lineCharsNum]);
 
+    useEffect(() => {
+        const progress = (userInput.length / para.length) * 100;
+        onProgress(progress);
+    }, [userInput, para.length, onProgress]);
+
     return (
         <div className="w-full h-full mx-auto flex flex-col items-center justify-center max-w-5xl gap-4 px-4 xl:px-0">
-            {/* Core Multiplayer Module */}
             <div ref={textContainerRef}>
                 <TextWrapper reset={resetGame} >
                     <TextContainer para={para} />
                     <Input userInput={userInput} para={para} />
                     <CustomCaret left={cursor} top={inputLine} characterWidth={characterWidth}/>
-                    <ResetGame reset={resetGame} />
                 </TextWrapper>
             </div>
         </div>
