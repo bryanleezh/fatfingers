@@ -1,5 +1,5 @@
 import usePartySocket from "partysocket/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import MainMultiplayer from "./MainMultiplayer";
 import { Button } from "../ui/button";
 import generateWord from "@/utils/generateWord";
@@ -10,11 +10,21 @@ type RoomSocketProps = {
     roomId: string,
 };
 
+type TotalProgressState = {
+    racers: {
+    name: string;
+    progress: number;
+    position?: number;
+  }[];
+}
+
 export default function RoomSocket( {roomId} : RoomSocketProps ) {
     const [para, setPara] = useState<string>(generateWord(30));
+    const [connectionCount, setConnectionCount] = useState<number>(0);
+    const [connectedClients, setConnectedClients] = useState<string[]>([]);
     const [progress, setProgress] = useState<number>(0);
-    // const totalprogress = useState<[]>();
-    const totalprogress = [
+    const [totalProgress, setTotalProgess] = useState<TotalProgressState>({ racers: [] });
+    const mockProgress = [
         { name: "Bryan", progress: 30 },
         { name: "You", progress: 80 },
         { name: "Me", progress: 100, position: 1 },
@@ -38,8 +48,15 @@ export default function RoomSocket( {roomId} : RoomSocketProps ) {
                 console.log(`room ${roomId} message`, receivedMessage);
                 if (receivedMessage.type === "welcome") {
                     console.log(receivedMessage.message);
-                } else {
+                    setConnectionCount(receivedMessage.connectionCount);
+                      setConnectedClients(receivedMessage.clients);
+                } else if (receivedMessage.type === "updateConnectionCount") {
+                    setConnectionCount(receivedMessage.connectionCount);
+                    setConnectedClients(receivedMessage.clients);
+                } else if (receivedMessage.type === "raceCountdown") {
                     setPara(receivedMessage.message);
+                } else if (receivedMessage.type === "progressUpdate" ) {
+                    setTotalProgess(receivedMessage.message);
                 }
             } catch (err) {
                 console.error("Failed to parse message", err);
@@ -53,9 +70,24 @@ export default function RoomSocket( {roomId} : RoomSocketProps ) {
         }
     });
 
+    useEffect(() => {
+        const handleBeforeUnload = () => {
+        if (ws) {
+            ws.close();
+        }
+        };
+
+        window.addEventListener("beforeunload", handleBeforeUnload);
+
+        return () => {
+        window.removeEventListener("beforeunload", handleBeforeUnload);
+        };
+    }, [ws]);
+
     const sendMessage = () => {
         if (ws) {
-            ws.send(JSON.stringify("start game"));
+            // ws.send(JSON.stringify("start game"));
+            ws.send(JSON.stringify({type: "startGame", message: "start race"}));
         }
     };
 
@@ -63,8 +95,15 @@ export default function RoomSocket( {roomId} : RoomSocketProps ) {
     return (
         <div className="flex flex-col gap-4 w-3/4 flex-grow items-center justify-center">
             <p>Connected to room: {roomId}</p>
+            <p>Number of connections: {connectionCount}</p>
+            {/* <p>Connected clients:</p>
+                <ul>
+                {connectedClients.map((client) => (
+                    <li key={client}>{client}</li>
+                ))}
+            </ul> */}
             <Button onClick={sendMessage}>Get Ready</Button>
-            <RaceProgressBar racers={totalprogress} />
+            <RaceProgressBar racers={mockProgress} />
             <MainMultiplayer para={para} onProgress={handleProgress} />
         </div>
     );

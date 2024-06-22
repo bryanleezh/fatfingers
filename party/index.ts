@@ -13,8 +13,41 @@ export default class Server implements Party.Server {
             url: ${new URL(ctx.request.url).pathname}`
     );
 
+    // Send a welcome message and the current number of connections to the new connection
+    conn.send(
+      JSON.stringify({ 
+        type: "welcome", 
+        message: "hello from server", 
+      })
+    );
+    // Notify all connections about the updated connection count
+    this.room.broadcast(
+      JSON.stringify({ 
+        type: "updateConnectionCount", 
+      })
+    );
     // let's send a message to the connection
-    conn.send(JSON.stringify({ type: "welcome", message: "hello from server" }));
+    // conn.send(JSON.stringify({ type: "welcome", message: "hello from server" }));
+  }
+
+  onDisconnect(conn: Party.Connection, reason: string, code: number) {
+    // Decrement the connection count when a client disconnects
+
+    // Log disconnection details
+    console.log(
+      `Disconnected:
+          id: ${conn.id}
+          room: ${this.room.id}
+          reason: ${reason}
+          code: ${code}`
+    );
+
+    // Notify all connections about the updated connection count
+    this.room.broadcast(
+      JSON.stringify({ 
+        type: "updateConnectionCount", 
+      })
+    );
   }
 
   onMessage(message: string, sender: Party.Connection) {
@@ -25,9 +58,14 @@ export default class Server implements Party.Server {
     //   JSON.stringify({ sender: sender.id, message }),
     //   //[sender.id] // Exclude the sender from the broadcast
     // );
-    this.room.broadcast(
-      JSON.stringify({type: "new word", message: generateWord(30)}),
-    )
+    const receivedMessage = JSON.parse(message);
+    if (receivedMessage.type === "startGame") {
+      this.room.broadcast(
+        JSON.stringify({type: "raceCountdown", message: generateWord(30)}),
+      )
+    } else if (receivedMessage.type === "progressUpdate") {
+      // TODO: send progress update
+    }
   }
 }
 
