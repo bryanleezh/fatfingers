@@ -95,7 +95,6 @@ export default function RoomSocket( {roomId} : RoomSocketProps ) {
     return (
         <div className="flex flex-col gap-4 w-3/4 flex-grow items-center justify-center">
             <p>Connected to room: {roomId}</p>
-            <p>Number of connections: {connectionCount}</p>
             {/* <p>Connected clients:</p>
                 <ul>
                 {connectedClients.map((client) => (

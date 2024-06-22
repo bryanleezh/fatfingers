@@ -30,24 +30,8 @@ export default class Server implements Party.Server {
     // conn.send(JSON.stringify({ type: "welcome", message: "hello from server" }));
   }
 
-  onDisconnect(conn: Party.Connection, reason: string, code: number) {
-    // Decrement the connection count when a client disconnects
-
-    // Log disconnection details
-    console.log(
-      `Disconnected:
-          id: ${conn.id}
-          room: ${this.room.id}
-          reason: ${reason}
-          code: ${code}`
-    );
-
-    // Notify all connections about the updated connection count
-    this.room.broadcast(
-      JSON.stringify({ 
-        type: "updateConnectionCount", 
-      })
-    );
+  onClose(connection: Party.Connection) {
+    this.room.broadcast(JSON.stringify({type: "disconnect", message: `So sad! ${connection.id} left the party!`}))
   }
 
   onMessage(message: string, sender: Party.Connection) {
