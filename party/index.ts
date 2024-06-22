@@ -13,21 +13,22 @@ export default class Server implements Party.Server {
             url: ${new URL(ctx.request.url).pathname}`
     );
 
-    // Send a welcome message and the current number of connections to the new connection
-    conn.send(
-      JSON.stringify({ 
-        type: "welcome", 
-        message: "hello from server", 
-      })
-    );
+    
     // Notify all connections about the updated connection count
+    // console.log(this.room.getConnections);
+    const playerCount = [...this.room.getConnections()].length;
+    const players: string[] = [];
+    for (const everyone of this.room.getConnections()) {
+      players.push(everyone.id);
+    };
+
     this.room.broadcast(
-      JSON.stringify({ 
-        type: "updateConnectionCount", 
+      JSON.stringify({
+        type: "updateConnection",
+        connectionCount: playerCount,
+        clients: players
       })
     );
-    // let's send a message to the connection
-    // conn.send(JSON.stringify({ type: "welcome", message: "hello from server" }));
   }
 
   onClose(connection: Party.Connection) {
@@ -35,7 +36,6 @@ export default class Server implements Party.Server {
   }
 
   onMessage(message: string, sender: Party.Connection) {
-    // let's log the message
     console.log(`connection ${sender.id} sent message: ${message}`);
     // as well as broadcast it to all the other connections in the room...
     // this.room.broadcast(

@@ -18,6 +18,7 @@ type TotalProgressState = {
   }[];
 }
 
+// TODO: Need to figure out own client ID to set progress to player
 export default function RoomSocket( {roomId} : RoomSocketProps ) {
     const [para, setPara] = useState<string>(generateWord(30));
     const [connectionCount, setConnectionCount] = useState<number>(0);
@@ -46,13 +47,10 @@ export default function RoomSocket( {roomId} : RoomSocketProps ) {
             try {
                 const receivedMessage = JSON.parse(e.data);
                 console.log(`room ${roomId} message`, receivedMessage);
-                if (receivedMessage.type === "welcome") {
-                    console.log(receivedMessage.message);
-                    setConnectionCount(receivedMessage.connectionCount);
-                      setConnectedClients(receivedMessage.clients);
-                } else if (receivedMessage.type === "updateConnectionCount") {
+                if (receivedMessage.type === "updateConnection") {
                     setConnectionCount(receivedMessage.connectionCount);
                     setConnectedClients(receivedMessage.clients);
+                    console.log(receivedMessage.clients)
                 } else if (receivedMessage.type === "raceCountdown") {
                     setPara(receivedMessage.message);
                 } else if (receivedMessage.type === "progressUpdate" ) {
@@ -95,12 +93,13 @@ export default function RoomSocket( {roomId} : RoomSocketProps ) {
     return (
         <div className="flex flex-col gap-4 w-3/4 flex-grow items-center justify-center">
             <p>Connected to room: {roomId}</p>
-            {/* <p>Connected clients:</p>
-                <ul>
+            <p>Connection Count: {connectionCount}</p>
+            <p>Connected clients:</p>
+            <ul>
                 {connectedClients.map((client) => (
                     <li key={client}>{client}</li>
                 ))}
-            </ul> */}
+            </ul>
             <Button onClick={sendMessage}>Get Ready</Button>
             <RaceProgressBar racers={mockProgress} />
             <MainMultiplayer para={para} onProgress={handleProgress} />
