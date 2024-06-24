@@ -1,7 +1,7 @@
 import { Link } from "next-view-transitions";
 import { Button } from "@/components/ui/button";
 import { DropdownMenuTrigger, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuContent, DropdownMenu } from "@/components/ui/dropdown-menu";
-import { CircleUserRound, Info, Keyboard, Settings } from "lucide-react";
+import { CircleUserRound, Info, Keyboard, Settings, Swords } from "lucide-react";
 import ThemeToggles from "./ThemeToggle";
 import fatlogo from "@/public/fat-fingers-icon.png"
 import Image from "next/image";
@@ -23,7 +23,11 @@ export default function Navbar() {
                 <span className="sr-only">Information</span>
             </Link>
             <ThemeToggles />
-            {/* <Link className="inline-flex h-10 w-10 items-center justify-center rounded-full" href="settings">
+            {/* <Link className="inline-flex h-10 w-10 items-center justify-center rounded-full" href="/multiplayer">
+                <Swords className="h-5 w-5" />
+                <span className="sr-only">Multiplayer</span>
+            </Link> */}
+            {/* <Link className="inline-flex h-10 w-10 items-center justify-center rounded-full" href="/settings">
                 <Settings className="h-5 w-5" />
                 <span className="sr-only">Settings</span>
             </Link>

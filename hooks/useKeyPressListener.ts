@@ -2,7 +2,7 @@ import { useCallback, useEffect } from "react";
 
 type useKeyPressListenerProps = {
     isFocused: boolean;
-    resetKey: "" | "Enter" | "Tab" | "Escape";
+    resetKey?: "" | "Enter" | "Tab" | "Escape";
     onKeyPress: (key: string) => void;
 }
 

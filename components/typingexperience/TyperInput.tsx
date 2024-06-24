@@ -39,7 +39,7 @@ export default function TyperInput() {
     const setResetCursor = useGameStateStore((state) => state.setResetCursor);  
 
     // typing module
-    const [para, setPara] = useState<string>(""); 
+    const [para, setPara] = useState<string>("");
     const [userInput, setUserInput] = useState<string>("");
     const [finalPara, setFinalPara] = useState<string>("");
     const [finalUserInput, setFinalUserInput] = useState<string>("");
@@ -87,10 +87,10 @@ export default function TyperInput() {
             if (key === "Backspace") {
                 setUserInput((prev) => prev.slice(0,-1));
                 setDecreaseCursor();
-            if (cursor === 0) {
-                setCursor(lineCharsNum - 1);
-                setInputLine((prev) => prev - 1);
-            }
+                if (cursor === 0) {
+                    setCursor(lineCharsNum - 1);
+                    setInputLine((prev) => prev - 1);
+                }
             } else if (key === resetKey) {
                 resetGame();
             } else {

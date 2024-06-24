@@ -1,6 +1,5 @@
 {
   "$schema": "https://www.partykit.io/schema.json",
   "name": "fatfingers-party",
-  "main": "party/index.ts",
-  "compatibilityDate": "2024-06-11"
+  "main": "party/index.ts"
 }
