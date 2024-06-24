@@ -42,8 +42,6 @@ export default function RoomSocket( {roomId} : RoomSocketProps ) {
             isUser: client === userId,
             progress: 0
         }));
-
-        console.log(newRacers);
         setTotalProgess({ racers: newRacers });
     };
 
