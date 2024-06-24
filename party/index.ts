@@ -13,26 +13,39 @@ export default class Server implements Party.Server {
             url: ${new URL(ctx.request.url).pathname}`
     );
 
+    conn.send(JSON.stringify({type: "userId", userId: conn.id}));
     
-    // Notify all connections about the updated connection count
-    // console.log(this.room.getConnections);
     const playerCount = [...this.room.getConnections()].length;
     const players: string[] = [];
-    for (const everyone of this.room.getConnections()) {
-      players.push(everyone.id);
+    for (const partyConnection of this.room.getConnections()) {
+      players.push(partyConnection.id);
     };
 
     this.room.broadcast(
       JSON.stringify({
         type: "updateConnection",
         connectionCount: playerCount,
-        clients: players
+        clients: players,
+        userId: conn.id
       })
     );
   }
 
   onClose(connection: Party.Connection) {
-    this.room.broadcast(JSON.stringify({type: "disconnect", message: `So sad! ${connection.id} left the party!`}))
+    this.room.broadcast(JSON.stringify({type: "disconnect", message: `So sad! ${connection.id} left the party!`}));
+    const playerCount = [...this.room.getConnections()].length;
+    const players: string[] = [];
+    for (const partyConnection of this.room.getConnections()) {
+      players.push(partyConnection.id);
+    };
+
+    this.room.broadcast(
+      JSON.stringify({
+        type: "clientDisconnect",
+        connectionCount: playerCount,
+        clients: players,
+      })
+    );
   }
 
   onMessage(message: string, sender: Party.Connection) {
