@@ -62,6 +62,8 @@ export default class Server implements Party.Server {
       )
     } else if (receivedMessage.type === "progressUpdate") {
       // TODO: send progress update
+      console.log(receivedMessage.clientProgress);
+      console.log(sender.id);
     }
   }
 }

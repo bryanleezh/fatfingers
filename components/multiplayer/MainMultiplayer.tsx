@@ -51,15 +51,16 @@ export default function MainMultiplayer( {para, onProgress} : MainMultiplayerPro
                 setUserInput((prev) => prev + key);
                 setIncreaseCursor();
             }
-        } else {
-            const isAlphanumeric = /^[a-zA-Z0-9]$/.test(key)
-            if (isAlphanumeric) {
-                // start countdown
-                setGameStart(true);
-                setUserInput((prev) => prev + key);
-                setIncreaseCursor();
-            }
-        }
+        } 
+        // else {
+        //     const isAlphanumeric = /^[a-zA-Z0-9]$/.test(key)
+        //     if (isAlphanumeric) {
+        //         // start countdown
+        //         setGameStart(true);
+        //         setUserInput((prev) => prev + key);
+        //         setIncreaseCursor();
+        //     }
+        // }
     }, [resetGame, setIncreaseCursor, setDecreaseCursor]);
 
     const calculateCharacterWidth = () => {

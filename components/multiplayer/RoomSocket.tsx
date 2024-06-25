@@ -1,9 +1,10 @@
 import usePartySocket from "partysocket/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import MainMultiplayer from "./MainMultiplayer";
 import { Button } from "../ui/button";
 import generateWord from "@/utils/generateWord";
 import RaceProgressBar from "./RaceProgressBar";
+import { useGameStateStore } from "@/store/gameState";
 
 
 type RoomSocketProps = {
@@ -20,6 +21,9 @@ type TotalProgressState = {
 }
 
 export default function RoomSocket( {roomId} : RoomSocketProps ) {
+    const gameStart = useGameStateStore((state) => state.gameStart);
+    const setGameStart = useGameStateStore((state) => state.setGameStart);
+
     const [para, setPara] = useState<string>(generateWord(30));
     const [connectionCount, setConnectionCount] = useState<number>(0);
     const [connectedClients, setConnectedClients] = useState<string[]>([]);
@@ -52,7 +56,6 @@ export default function RoomSocket( {roomId} : RoomSocketProps ) {
         onOpen() {
             console.log(`connected to room ${roomId}`);
         },
-        // TODO: Add logic for setting number of clients connected
         // TODO: Add message type that logs client joins room
         onMessage(e) {
             try {
@@ -60,8 +63,7 @@ export default function RoomSocket( {roomId} : RoomSocketProps ) {
                 console.log(`room ${roomId} message`, receivedMessage);
                 if (receivedMessage.type === "userId") {
                     setUserId(receivedMessage.userId);
-                }
-                else if (receivedMessage.type === "updateConnection") {
+                } else if (receivedMessage.type === "updateConnection") {
                     setConnectionCount(receivedMessage.connectionCount);
                     setConnectedClients(receivedMessage.clients);
                     updateTotalProgress(receivedMessage.clients, receivedMessage.userId);
@@ -69,9 +71,9 @@ export default function RoomSocket( {roomId} : RoomSocketProps ) {
                     setConnectionCount(receivedMessage.connectionCount);
                     setConnectedClients(receivedMessage.clients);
                     if (userId) updateTotalProgress(receivedMessage.clients, userId);
-                } 
-                else if (receivedMessage.type === "raceCountdown") {
+                } else if (receivedMessage.type === "raceCountdown") {
                     setPara(receivedMessage.message);
+                    // TODO: Start countdown
                 } else if (receivedMessage.type === "progressUpdate" ) {
                     setTotalProgess(receivedMessage.message);
                 }
@@ -87,12 +89,21 @@ export default function RoomSocket( {roomId} : RoomSocketProps ) {
         }
     });
 
+    // * Periodically sends over progress of client to partykit server
+    useEffect(() => {
+        const interval = setInterval(() => {
+            if (gameStart && ws) {
+                ws.send(JSON.stringify({ type: "progressUpdate", clientProgress: progress }));
+            }
+        }, 3000); // Send every 3 seconds
+        return () => clearInterval(interval);
+    }, [ws, progress, gameStart]);
+
     const sendMessage = () => {
         if (ws) {
             ws.send(JSON.stringify({type: "startGame", message: "start race"}));
         }
     };
-
 
     return (
         <div className="flex flex-col gap-4 w-3/4 flex-grow items-center justify-center">
