@@ -23,10 +23,10 @@ export default function Navbar() {
                 <span className="sr-only">Information</span>
             </Link>
             <ThemeToggles />
-            {/* <Link className="inline-flex h-10 w-10 items-center justify-center rounded-full" href="/multiplayer">
+            <Link className="inline-flex h-10 w-10 items-center justify-center rounded-full" href="/multiplayer">
                 <Swords className="h-5 w-5" />
                 <span className="sr-only">Multiplayer</span>
-            </Link> */}
+            </Link>
             {/* <Link className="inline-flex h-10 w-10 items-center justify-center rounded-full" href="/settings">
                 <Settings className="h-5 w-5" />
                 <span className="sr-only">Settings</span>

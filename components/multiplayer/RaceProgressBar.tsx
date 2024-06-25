@@ -1,5 +1,3 @@
-// TODO: Add race progress bar for each racer
-
 import displayPosition from "@/utils/displayPosition";
 import { Bike } from "lucide-react";
 
@@ -19,7 +17,6 @@ export default function RaceProgressBar({ racers }: RaceProgressBarProps) {
         <div className="grid gap-6 w-full max-w-[50vw]">
             {racers.map((racer) => (
                 <div key={racer.name} className="flex items-center gap-4">
-                    {/* <span className="text-sm font-medium min-w-[50px]">{racer.name}</span> */}
                     <span className="text-sm font-medium min-w-[50px]">
                         {racer.isUser ? "You" : "Guest"}
                     </span>
