@@ -18,7 +18,7 @@ export default function Room() {
 
     if (!roomId) {
         return <div>Loading...</div>;
-    }
+    };
 
     return (
         <RoomSocket roomId={roomId} />
