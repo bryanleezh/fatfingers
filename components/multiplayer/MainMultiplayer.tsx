@@ -107,7 +107,7 @@ export default function MainMultiplayer( {para, onProgress} : MainMultiplayerPro
     }, [cursor, lineCharsNum]);
 
     useEffect(() => {
-        const progress = (userInput.length / para.length) * 100;
+        const progress = Math.round((userInput.length / para.length) * 100);
         onProgress(progress);
     }, [userInput, para.length, onProgress]);
 
