@@ -1,5 +1,5 @@
 import generateWord from "@/utils/generateWord";
-import type * as Party from "partykit/server";
+import * as Party from "partykit/server";
 
 export default class Server implements Party.Server {
   constructor(readonly room: Party.Room) {}
@@ -61,10 +61,14 @@ export default class Server implements Party.Server {
         JSON.stringify({type: "raceCountdown", message: generateWord(30)}),
       )
     } else if (receivedMessage.type === "progressUpdate") {
-      // TODO: send progress update
-      console.log(receivedMessage.clientProgress);
-      console.log(sender.id);
-    }
+      this.room.broadcast(
+        JSON.stringify({
+          type: "progressUpdate",
+          progress: receivedMessage.clientProgress,
+          client: sender.id
+        })
+      )
+    };
   }
 }
 

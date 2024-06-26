@@ -25,11 +25,11 @@ export default function RoomSocket( {roomId} : RoomSocketProps ) {
     const setGameStart = useGameStateStore((state) => state.setGameStart);
 
     const [para, setPara] = useState<string>(generateWord(30));
+    const [userId, setUserId] = useState<string | null>(null);
     const [connectionCount, setConnectionCount] = useState<number>(0);
-    const [connectedClients, setConnectedClients] = useState<string[]>([]);
+    // const [connectedClients, setConnectedClients] = useState<string[]>([]);
     const [progress, setProgress] = useState<number>(0);
     const [totalProgress, setTotalProgess] = useState<TotalProgressState>({ racers: [] });
-    const [userId, setUserId] = useState<string | null>(null);
     const mockProgress = [
         { name: "Bryan", isUser: true, progress: 30 },
         { name: "You", isUser: false, progress: 80 },
@@ -40,15 +40,23 @@ export default function RoomSocket( {roomId} : RoomSocketProps ) {
         setProgress(progress);
     };
 
-    const updateTotalProgress = (clients: string[], userId: string) => {
+    const createTotalProgress = (clients: string[], userId: string) => {
         const newRacers = clients.map(client => ({
             name: client,
             isUser: client === userId,
             progress: 0
         }));
+
         setTotalProgess({ racers: newRacers });
     };
 
+    const updateTotalProgress = (client: string, newProgress: number) => {
+        setTotalProgess(prevState => ({
+            racers: prevState.racers.map(racer =>
+                racer.name === client ? { ...racer, progress: newProgress } : racer
+            )
+        }));
+    };
 
     const ws = usePartySocket({
         host: "localhost:1999", // or your PartyKit server URL
@@ -65,17 +73,17 @@ export default function RoomSocket( {roomId} : RoomSocketProps ) {
                     setUserId(receivedMessage.userId);
                 } else if (receivedMessage.type === "updateConnection") {
                     setConnectionCount(receivedMessage.connectionCount);
-                    setConnectedClients(receivedMessage.clients);
-                    updateTotalProgress(receivedMessage.clients, receivedMessage.userId);
+                    if (userId) createTotalProgress(receivedMessage.clients, userId);
+                    // setConnectedClients(receivedMessage.clients);
                 } else if (receivedMessage.type === "clientDisconnect") {
                     setConnectionCount(receivedMessage.connectionCount);
-                    setConnectedClients(receivedMessage.clients);
-                    if (userId) updateTotalProgress(receivedMessage.clients, userId);
+                    // setConnectedClients(receivedMessage.clients);
+                    if (userId) createTotalProgress(receivedMessage.clients, userId);
                 } else if (receivedMessage.type === "raceCountdown") {
                     setPara(receivedMessage.message);
                     // TODO: Start countdown
                 } else if (receivedMessage.type === "progressUpdate" ) {
-                    setTotalProgess(receivedMessage.message);
+                    updateTotalProgress(receivedMessage.client, receivedMessage.progress);
                 }
             } catch (err) {
                 console.error("Failed to parse message", err);
@@ -95,13 +103,14 @@ export default function RoomSocket( {roomId} : RoomSocketProps ) {
             if (gameStart && ws) {
                 ws.send(JSON.stringify({ type: "progressUpdate", clientProgress: progress }));
             }
-        }, 3000); // Send every 3 seconds
+        }, 1500);
         return () => clearInterval(interval);
     }, [ws, progress, gameStart]);
 
     const sendMessage = () => {
         if (ws) {
             ws.send(JSON.stringify({type: "startGame", message: "start race"}));
+            setGameStart(true);
         }
     };
 
@@ -109,6 +118,7 @@ export default function RoomSocket( {roomId} : RoomSocketProps ) {
         <div className="flex flex-col gap-4 w-3/4 flex-grow items-center justify-center">
             <p>Connected to room: {roomId}</p>
             <p>Players in room: {connectionCount}</p>
+            <p>Client Id: {userId}</p>
             {/* <p>Connected clients:</p>
             <ul>
                 {connectedClients.map((client) => (
