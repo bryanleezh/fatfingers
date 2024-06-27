@@ -5,6 +5,7 @@ import { Button } from "../ui/button";
 import generateWord from "@/utils/generateWord";
 import RaceProgressBar from "./RaceProgressBar";
 import { useGameStateStore } from "@/store/gameState";
+import CountDown from "./CountDown";
 
 
 type RoomSocketProps = {
@@ -25,9 +26,9 @@ export default function RoomSocket( {roomId} : RoomSocketProps ) {
     const setGameStart = useGameStateStore((state) => state.setGameStart);
 
     const [para, setPara] = useState<string>(generateWord(30));
+    const [countDown, setCountdown] = useState<boolean>(false);
     const [userId, setUserId] = useState<string | null>(null);
     const [connectionCount, setConnectionCount] = useState<number>(0);
-    // const [connectedClients, setConnectedClients] = useState<string[]>([]);
     const [progress, setProgress] = useState<number>(0);
     const [totalProgress, setTotalProgess] = useState<TotalProgressState>({ racers: [] });
     const mockProgress = [
@@ -58,6 +59,11 @@ export default function RoomSocket( {roomId} : RoomSocketProps ) {
         }));
     };
 
+    const startGame = () => {
+        console.log("game start");
+        setGameStart(true);
+    };
+
     const ws = usePartySocket({
         host: "localhost:1999", // or your PartyKit server URL
         room: roomId,
@@ -74,14 +80,12 @@ export default function RoomSocket( {roomId} : RoomSocketProps ) {
                 } else if (receivedMessage.type === "updateConnection") {
                     setConnectionCount(receivedMessage.connectionCount);
                     if (userId) createTotalProgress(receivedMessage.clients, userId);
-                    // setConnectedClients(receivedMessage.clients);
                 } else if (receivedMessage.type === "clientDisconnect") {
                     setConnectionCount(receivedMessage.connectionCount);
-                    // setConnectedClients(receivedMessage.clients);
                     if (userId) createTotalProgress(receivedMessage.clients, userId);
                 } else if (receivedMessage.type === "raceCountdown") {
                     setPara(receivedMessage.message);
-                    // TODO: Start countdown
+                    setCountdown(true);
                 } else if (receivedMessage.type === "progressUpdate" ) {
                     updateTotalProgress(receivedMessage.client, receivedMessage.progress);
                 }
@@ -110,7 +114,6 @@ export default function RoomSocket( {roomId} : RoomSocketProps ) {
     const sendMessage = () => {
         if (ws) {
             ws.send(JSON.stringify({type: "startGame", message: "start race"}));
-            setGameStart(true);
         }
     };
 
@@ -119,13 +122,10 @@ export default function RoomSocket( {roomId} : RoomSocketProps ) {
             <p>Connected to room: {roomId}</p>
             <p>Players in room: {connectionCount}</p>
             <p>Client Id: {userId}</p>
-            {/* <p>Connected clients:</p>
-            <ul>
-                {connectedClients.map((client) => (
-                    <li key={client}>{client}</li>
-                ))}
-            </ul> */}
+            {/* TODO: Fade button away upon Countdown set to true */}
             <Button onClick={sendMessage}>Get Ready</Button>
+            {/* TODO: Style countdown to be fixed on top of entire component */}
+            <CountDown countDown={countDown} onTimeUp={startGame} />
             <RaceProgressBar racers={totalProgress.racers} />
             <MainMultiplayer para={para} onProgress={handleProgress} />
         </div>

@@ -59,7 +59,7 @@ export default class Server implements Party.Server {
     if (receivedMessage.type === "startGame") {
       this.room.broadcast(
         JSON.stringify({type: "raceCountdown", message: generateWord(30)}),
-      )
+      );
     } else if (receivedMessage.type === "progressUpdate") {
       this.room.broadcast(
         JSON.stringify({
