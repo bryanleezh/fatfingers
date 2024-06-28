@@ -65,6 +65,11 @@ export default function RoomSocket( {roomId} : RoomSocketProps ) {
         setGameStart(true);
     };
 
+    //  TODO: Reset entire party state tp allow for play again function
+    const resetGame = () => {
+
+    };
+
     const ws = usePartySocket({
         host: "localhost:1999", // or your PartyKit server URL
         room: roomId,
@@ -103,14 +108,23 @@ export default function RoomSocket( {roomId} : RoomSocketProps ) {
     });
 
     // * Periodically sends over progress of client to partykit server
+    const intervalRef = useRef<NodeJS.Timeout | null>(null);
     useEffect(() => {
-        const interval = setInterval(() => {
-            if (gameStart && ws) {
+        if (gameStart && ws) {
+            intervalRef.current = setInterval(() => {
                 ws.send(JSON.stringify({ type: "progressUpdate", clientProgress: progress }));
+            }, 1500);
+        } else if (!gameStart && intervalRef.current) {
+            clearInterval(intervalRef.current);
+            intervalRef.current = null;
+        }
+
+        return () => {
+            if (intervalRef.current) {
+                clearInterval(intervalRef.current);
             }
-        }, 1500);
-        return () => clearInterval(interval);
-    }, [ws, progress, gameStart]);
+        };
+    }, [gameStart, progress, ws]);
 
     const sendMessage = () => {
         if (ws) {
