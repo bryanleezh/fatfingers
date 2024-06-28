@@ -7,6 +7,8 @@ type GameState = {
     setGameStart: (gameStart: boolean) => void;
     endGame: boolean,
     setEndGame: (endGame: boolean) => void,
+    countDown: boolean,
+    setCountDown: (countDown: boolean) => void,
     rightChars: number;
     setRightChars: (rightChars: number) => void,
     wrongChars: number;
@@ -33,6 +35,8 @@ export const useGameStateStore = create<GameState>((set) => ({
     setGameStart: (gameStart: boolean) => set({ gameStart }),
     endGame: false,
     setEndGame: (endGame) => set({ endGame }),
+    countDown: false,
+    setCountDown: (countDown) => set({ countDown }),
     rightChars: 0,
     setRightChars: (rightChars: number) => set({ rightChars }),
     wrongChars: 0,

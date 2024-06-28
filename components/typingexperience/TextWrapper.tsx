@@ -15,7 +15,6 @@ export default function TextWrapper( {children, reset}: TextWrapperProps ) {
         setFocused(true);
     };
 
-    // TODO: Reset game when blurred
     const handleBlur = () => {
         setFocused(false);
         setGameStart(false);

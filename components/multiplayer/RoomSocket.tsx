@@ -1,5 +1,5 @@
 import usePartySocket from "partysocket/react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import MainMultiplayer from "./MainMultiplayer";
 import { Button } from "../ui/button";
 import generateWord from "@/utils/generateWord";
@@ -24,9 +24,9 @@ type TotalProgressState = {
 export default function RoomSocket( {roomId} : RoomSocketProps ) {
     const gameStart = useGameStateStore((state) => state.gameStart);
     const setGameStart = useGameStateStore((state) => state.setGameStart);
-
+    const countDown = useGameStateStore((state) => state.countDown);
+    const setCountDown = useGameStateStore((state) => state.setCountDown);
     const [para, setPara] = useState<string>(generateWord(30));
-    const [countDown, setCountdown] = useState<boolean>(false);
     const [userId, setUserId] = useState<string | null>(null);
     const [connectionCount, setConnectionCount] = useState<number>(0);
     const [progress, setProgress] = useState<number>(0);
@@ -61,6 +61,7 @@ export default function RoomSocket( {roomId} : RoomSocketProps ) {
 
     const startGame = () => {
         console.log("game start");
+        setCountDown(false);
         setGameStart(true);
     };
 
@@ -85,7 +86,7 @@ export default function RoomSocket( {roomId} : RoomSocketProps ) {
                     if (userId) createTotalProgress(receivedMessage.clients, userId);
                 } else if (receivedMessage.type === "raceCountdown") {
                     setPara(receivedMessage.message);
-                    setCountdown(true);
+                    setCountDown(true);
                 } else if (receivedMessage.type === "progressUpdate" ) {
                     updateTotalProgress(receivedMessage.client, receivedMessage.progress);
                 }
@@ -124,7 +125,6 @@ export default function RoomSocket( {roomId} : RoomSocketProps ) {
             <p>Client Id: {userId}</p>
             {/* TODO: Fade button away upon Countdown set to true */}
             <Button onClick={sendMessage}>Get Ready</Button>
-            {/* TODO: Style countdown to be fixed on top of entire component */}
             <CountDown countDown={countDown} onTimeUp={startGame} />
             <RaceProgressBar racers={totalProgress.racers} />
             <MainMultiplayer para={para} onProgress={handleProgress} />
