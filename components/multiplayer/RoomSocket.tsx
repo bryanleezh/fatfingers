@@ -6,6 +6,7 @@ import generateWord from "@/utils/generateWord";
 import RaceProgressBar from "./RaceProgressBar";
 import { useGameStateStore } from "@/store/gameState";
 import CountDown from "./CountDown";
+import ReadyButton from "./ReadyButton";
 
 
 type RoomSocketProps = {
@@ -138,7 +139,8 @@ export default function RoomSocket( {roomId} : RoomSocketProps ) {
             <p>Players in room: {connectionCount}</p>
             <p>Client Id: {userId}</p>
             {/* TODO: Fade button away upon Countdown set to true */}
-            <Button onClick={sendMessage}>Get Ready</Button>
+            <ReadyButton sendMessage={sendMessage} />
+            {/* <Button onClick={sendMessage}>Get Ready</Button> */}
             <CountDown countDown={countDown} onTimeUp={startGame} />
             <RaceProgressBar racers={totalProgress.racers} />
             <MainMultiplayer para={para} onProgress={handleProgress} />
