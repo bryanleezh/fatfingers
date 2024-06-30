@@ -94,6 +94,7 @@ export default function RoomSocket( {roomId} : RoomSocketProps ) {
                     setPara(receivedMessage.message);
                     setCountDown(true);
                 } else if (receivedMessage.type === "progressUpdate" ) {
+                    console.log("receive progress update");
                     updateTotalProgress(receivedMessage.client, receivedMessage.progress);
                 }
             } catch (err) {
@@ -113,6 +114,7 @@ export default function RoomSocket( {roomId} : RoomSocketProps ) {
     useEffect(() => {
         if (gameStart && ws) {
             intervalRef.current = setInterval(() => {
+                console.log("send progress update");
                 ws.send(JSON.stringify({ type: "progressUpdate", clientProgress: progress }));
             }, 1500);
         } else if (!gameStart && intervalRef.current) {
@@ -138,9 +140,7 @@ export default function RoomSocket( {roomId} : RoomSocketProps ) {
             <p>Connected to room: {roomId}</p>
             <p>Players in room: {connectionCount}</p>
             <p>Client Id: {userId}</p>
-            {/* TODO: Fade button away upon Countdown set to true */}
             <ReadyButton sendMessage={sendMessage} />
-            {/* <Button onClick={sendMessage}>Get Ready</Button> */}
             <CountDown countDown={countDown} onTimeUp={startGame} />
             <RaceProgressBar racers={totalProgress.racers} />
             <MainMultiplayer para={para} onProgress={handleProgress} />
