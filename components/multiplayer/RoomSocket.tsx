@@ -136,8 +136,9 @@ export default function RoomSocket( {roomId} : RoomSocketProps ) {
     };
 
     return (
-        <div className="flex flex-col gap-4 w-3/4 flex-grow items-center justify-center">
-            <p>Connected to room: {roomId}</p>
+        <div className="flex flex-col gap-4 w-3/4 flex-grow items-center justify-cente text-center">
+            <p>Connected to room:</p>
+            <p>{roomId}</p>
             <p>Players in room: {connectionCount}</p>
             <p>Client Id: {userId}</p>
             <ReadyButton sendMessage={sendMessage} />

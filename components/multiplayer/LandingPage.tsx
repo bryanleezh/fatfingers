@@ -1,16 +1,29 @@
 "use client";
 
-import { Link } from "next-view-transitions"
+import { useRouter } from "next/navigation";
 import { Button } from "../ui/button"
 import { Input } from "../ui/input"
 import { useState } from "react";
+import UniqueStringId from "@/utils/uniqueStringId";
 
 export default function LandingPage() {
   const [roomId, setRoomId] = useState<string>("");
+  const router = useRouter();
 
   const joinRoom = () => {
-    console.log("join room", roomId);
+    if (roomId !== "") {
+      console.log("join room", roomId);
+      router.push(`/multiplayer/${roomId}`);
+    } else {
+      alert("Please enter a room id!");
+    }
   };
+
+  const createRoom = () => {
+    const tempId = UniqueStringId();
+    console.log("create room");
+    router.push(`/multiplayer/${tempId}`);
+  }
 
   return (
     <section className="flex flex-col gap-4 w-3/4 flex-grow items-center justify-center">
@@ -26,19 +39,21 @@ export default function LandingPage() {
           <div className="flex items-center space-x-2">
             <Input 
               type="text"
-              placeholder="Enter room code" 
+              placeholder="Enter room code"
+              className="w-full"
               value={roomId}
               onChange={(e) => setRoomId(e.target.value)}
             />
             <Button onClick={joinRoom}>Join Room</Button>
+            <Button onClick={createRoom}>Create Room</Button>
           </div>
-          <Link
+          {/* <Link
             href="#"
             className="inline-flex h-10 items-center justify-center rounded-md bg-primary px-8 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
             prefetch={false}
           >
             Create Room
-          </Link>
+          </Link> */}
         </div>
       </div>
     </section>
