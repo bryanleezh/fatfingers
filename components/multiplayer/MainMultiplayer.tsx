@@ -9,12 +9,13 @@ import useKeyPressListener from "@/hooks/useKeyPressListener";
 type MainMultiplayerProps = {
     para: string,
     onProgress: (progress: number) => void;
+    onGameComplete: () => void;
 }
 
 // TODO: Add logic on when someone enter the room, it will set new racer in minimap
 // TODO: Add minimap for racers
 
-export default function MainMultiplayer( {para, onProgress} : MainMultiplayerProps) {
+export default function MainMultiplayer( {para, onProgress, onGameComplete} : MainMultiplayerProps) {
     const [userInput, setUserInput] = useState<string>("");
     const textContainerRef = useRef<HTMLHeadingElement>(null);
     const [characterWidth, setCharacterWidth] = useState<number>(0);
@@ -52,15 +53,6 @@ export default function MainMultiplayer( {para, onProgress} : MainMultiplayerPro
                 setIncreaseCursor();
             }
         } 
-        // else {
-        //     const isAlphanumeric = /^[a-zA-Z0-9]$/.test(key)
-        //     if (isAlphanumeric) {
-        //         // start countdown
-        //         setGameStart(true);
-        //         setUserInput((prev) => prev + key);
-        //         setIncreaseCursor();
-        //     }
-        // }
     }, [resetGame, setIncreaseCursor, setDecreaseCursor]);
 
     const calculateCharacterWidth = () => {
@@ -102,6 +94,7 @@ export default function MainMultiplayer( {para, onProgress} : MainMultiplayerPro
         };
         if (userInput.length === para.length) {            
             // TODO: Add logic to send to server complete para
+            onGameComplete();
             console.log("Game complete!");
         }
     }, [cursor, lineCharsNum]);

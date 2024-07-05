@@ -132,11 +132,17 @@ export default function RoomSocket( {roomId} : RoomSocketProps ) {
     const sendMessage = () => {
         if (ws) {
             ws.send(JSON.stringify({type: "startGame", message: "start race"}));
-        }
+        };
+    };
+
+    const handleComplete = () => {
+        if (ws) {
+            ws.send(JSON.stringify({type: "completeGame", message: "complete race"}));
+        };
     };
 
     return (
-        <div className="flex flex-col gap-4 w-3/4 flex-grow items-center justify-cente text-center">
+        <div className="flex flex-col gap-4 w-3/4 flex-grow items-center justify-center text-center">
             <p>Connected to room:</p>
             <p>{roomId}</p>
             <p>Players in room: {connectionCount}</p>
@@ -144,7 +150,7 @@ export default function RoomSocket( {roomId} : RoomSocketProps ) {
             <ReadyButton sendMessage={sendMessage} />
             <CountDown countDown={countDown} onTimeUp={startGame} />
             <RaceProgressBar racers={totalProgress.racers} />
-            <MainMultiplayer para={para} onProgress={handleProgress} />
+            <MainMultiplayer para={para} onProgress={handleProgress} onGameComplete={handleComplete}/>
         </div>
     );
 
