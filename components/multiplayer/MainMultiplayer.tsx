@@ -94,6 +94,7 @@ export default function MainMultiplayer( {para, onProgress, onGameComplete} : Ma
         };
         if (userInput.length === para.length) {            
             // TODO: Add logic to send to server complete para
+            // TODO: Add results computation of WPM to display
             onGameComplete();
             console.log("Game complete!");
         }
