@@ -60,13 +60,18 @@ export default function RoomSocket( {roomId} : RoomSocketProps ) {
         }));
     };
 
+    // TODO: Add complete user to totalProgress
+    const clientCompleteGame = (client: string) => {
+        console.log(client, "completed game");
+    }
+
     const startGame = () => {
         console.log("game start");
         setCountDown(false);
         setGameStart(true);
     };
 
-    //  TODO: Reset entire party state tp allow for play again function
+    //  TODO: Reset entire party state t0 allow for play again function
     const resetGame = () => {
 
     };
@@ -93,9 +98,11 @@ export default function RoomSocket( {roomId} : RoomSocketProps ) {
                 } else if (receivedMessage.type === "raceCountdown") {
                     setPara(receivedMessage.message);
                     setCountDown(true);
-                } else if (receivedMessage.type === "progressUpdate" ) {
+                } else if (receivedMessage.type === "progressUpdate") {
                     console.log("receive progress update");
                     updateTotalProgress(receivedMessage.client, receivedMessage.progress);
+                } else if (receivedMessage.type === "completeGame") {
+                    clientCompleteGame(receivedMessage.client);
                 }
             } catch (err) {
                 console.error("Failed to parse message", err);

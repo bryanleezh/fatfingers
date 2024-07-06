@@ -68,6 +68,13 @@ export default class Server implements Party.Server {
           client: sender.id
         })
       )
+    } else if (receivedMessage.type === "completGame") {
+      this.room.broadcast(
+        JSON.stringify({
+          type: "completGame",
+          client: sender.id
+        })
+      )
     };
   }
 }
