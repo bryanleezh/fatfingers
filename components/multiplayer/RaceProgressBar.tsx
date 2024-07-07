@@ -12,7 +12,7 @@ type RaceProgressBarProps = {
 
 export default function RaceProgressBar({ racers }: RaceProgressBarProps) {
     const sortedRacers = racers.sort((a, b) => (b.isUser ? 1 : 0) - (a.isUser ? 1 : 0));
-    
+    console.log(sortedRacers);
     return (
         <div className="grid gap-6 w-full max-w-[50vw]">
             {racers.map((racer) => (

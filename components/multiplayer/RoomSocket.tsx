@@ -1,7 +1,6 @@
 import usePartySocket from "partysocket/react";
 import { useEffect, useRef, useState } from "react";
 import MainMultiplayer from "./MainMultiplayer";
-import { Button } from "../ui/button";
 import generateWord from "@/utils/generateWord";
 import RaceProgressBar from "./RaceProgressBar";
 import { useGameStateStore } from "@/store/gameState";
@@ -13,14 +12,16 @@ type RoomSocketProps = {
     roomId: string,
 };
 
+type Racer = {
+    name: string;
+    isUser: boolean;
+    progress: number;
+    position?: number;
+};
+
 type TotalProgressState = {
-    racers: {
-        name: string;
-        isUser: boolean;
-        progress: number;
-        position?: number;
-  }[];
-}
+    racers: Racer[];
+};
 
 export default function RoomSocket( {roomId} : RoomSocketProps ) {
     const gameStart = useGameStateStore((state) => state.gameStart);
@@ -32,7 +33,8 @@ export default function RoomSocket( {roomId} : RoomSocketProps ) {
     const [connectionCount, setConnectionCount] = useState<number>(0);
     const [progress, setProgress] = useState<number>(0);
     const [totalProgress, setTotalProgess] = useState<TotalProgressState>({ racers: [] });
-    const [positions, setPositions] = useState<number>(1);
+    const [finishOrder, setFinishOrder] = useState<string[]>([]);
+
     const mockProgress = [
         { name: "Bryan", isUser: true, progress: 30 },
         { name: "You", isUser: false, progress: 80 },
@@ -47,7 +49,8 @@ export default function RoomSocket( {roomId} : RoomSocketProps ) {
         const newRacers = clients.map(client => ({
             name: client,
             isUser: client === userId,
-            progress: 0
+            progress: 0,
+            position: undefined
         }));
 
         setTotalProgess({ racers: newRacers });
@@ -65,14 +68,26 @@ export default function RoomSocket( {roomId} : RoomSocketProps ) {
     // * Need to find a way to keep track of position of each player, might be stored in server side?
     const clientCompleteGame = (client: string) => {
         console.log(client, "completed game");
-        setTotalProgess(prevState => ({
-            racers: prevState.racers.map(racer =>
-                racer.name === client ? { ...racer, position: positions } : racer
-            )
-        }));
-        setPositions(prev => prev + 1);
-    }
+        setFinishOrder(prevOrder => {
+            const newOrder = [...prevOrder, client];
+            updatePositions(newOrder);
+            return newOrder;
+        });
+        setGameStart(false);
+    };
 
+    const updatePositions = (order: string[]) => {
+        setTotalProgess(prevState => ({
+            racers: prevState.racers.map(racer => ({
+                ...racer,
+                position: order.indexOf(racer.name) + 1
+            }))
+        }));
+    };
+    // useEffect(() => {
+    //     console.log("Finish Order:", finishOrder);
+    //     console.log("Total Progress:", totalProgress);
+    // }, [totalProgress]);
     const startGame = () => {
         console.log("game start");
         setCountDown(false);
@@ -129,6 +144,7 @@ export default function RoomSocket( {roomId} : RoomSocketProps ) {
     useEffect(() => {
         if (gameStart && ws) {
             intervalRef.current = setInterval(() => {
+                console.log(totalProgress);
                 console.log("send progress update");
                 ws.send(JSON.stringify({ type: "progressUpdate", clientProgress: progress }));
             }, 1500);
@@ -165,6 +181,7 @@ export default function RoomSocket( {roomId} : RoomSocketProps ) {
             <ReadyButton sendMessage={sendMessage} />
             <CountDown countDown={countDown} onTimeUp={startGame} />
             <RaceProgressBar racers={totalProgress.racers} />
+            {/* <RaceProgressBar racers={mockProgress} /> */}
             <MainMultiplayer para={para} onProgress={handleProgress} onGameComplete={handleComplete}/>
         </div>
     );
