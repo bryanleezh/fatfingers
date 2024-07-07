@@ -32,6 +32,7 @@ export default function RoomSocket( {roomId} : RoomSocketProps ) {
     const [connectionCount, setConnectionCount] = useState<number>(0);
     const [progress, setProgress] = useState<number>(0);
     const [totalProgress, setTotalProgess] = useState<TotalProgressState>({ racers: [] });
+    const [positions, setPositions] = useState<number>(1);
     const mockProgress = [
         { name: "Bryan", isUser: true, progress: 30 },
         { name: "You", isUser: false, progress: 80 },
@@ -61,8 +62,15 @@ export default function RoomSocket( {roomId} : RoomSocketProps ) {
     };
 
     // TODO: Add complete user to totalProgress
+    // * Need to find a way to keep track of position of each player, might be stored in server side?
     const clientCompleteGame = (client: string) => {
         console.log(client, "completed game");
+        setTotalProgess(prevState => ({
+            racers: prevState.racers.map(racer =>
+                racer.name === client ? { ...racer, position: positions } : racer
+            )
+        }));
+        setPositions(prev => prev + 1);
     }
 
     const startGame = () => {
@@ -149,7 +157,7 @@ export default function RoomSocket( {roomId} : RoomSocketProps ) {
     };
 
     return (
-        <div className="flex flex-col gap-4 w-3/4 flex-grow items-center justify-center text-center">
+        <div className="flex flex-col gap-4 w-3/4 flex-grow items-center justify-center">
             <p>Connected to room:</p>
             <p>{roomId}</p>
             <p>Players in room: {connectionCount}</p>
