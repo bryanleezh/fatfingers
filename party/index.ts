@@ -74,7 +74,7 @@ export default class Server implements Party.Server {
       this.finishedClients = [];
 
       this.room.broadcast(
-        JSON.stringify({type: "raceCountdown", message: generateWord(10)}),
+        JSON.stringify({type: "raceCountdown", message: generateWord(30)}),
       );
     } else if (receivedMessage.type === "progressUpdate") {
       const clientState = this.clientStates.get(sender.id);
