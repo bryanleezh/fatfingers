@@ -64,30 +64,6 @@ export default function RoomSocket( {roomId} : RoomSocketProps ) {
         }));
     };
 
-    // TODO: Add complete user to totalProgress
-    // * Need to find a way to keep track of position of each player, might be stored in server side?
-    const clientCompleteGame = (client: string) => {
-        console.log(client, "completed game");
-        setFinishOrder(prevOrder => {
-            const newOrder = [...prevOrder, client];
-            updatePositions(newOrder);
-            return newOrder;
-        });
-        setGameStart(false);
-    };
-
-    const updatePositions = (order: string[]) => {
-        setTotalProgess(prevState => ({
-            racers: prevState.racers.map(racer => ({
-                ...racer,
-                position: order.indexOf(racer.name) + 1
-            }))
-        }));
-    };
-    // useEffect(() => {
-    //     console.log("Finish Order:", finishOrder);
-    //     console.log("Total Progress:", totalProgress);
-    // }, [totalProgress]);
     const startGame = () => {
         console.log("game start");
         setCountDown(false);
@@ -121,12 +97,16 @@ export default function RoomSocket( {roomId} : RoomSocketProps ) {
                 } else if (receivedMessage.type === "raceCountdown") {
                     setPara(receivedMessage.message);
                     setCountDown(true);
-                } else if (receivedMessage.type === "progressUpdate") {
-                    console.log("receive progress update");
-                    updateTotalProgress(receivedMessage.client, receivedMessage.progress);
-                } else if (receivedMessage.type === "completeGame") {
-                    clientCompleteGame(receivedMessage.client);
-                }
+                } else if (receivedMessage.type === "gameStateUpdate") {
+                    setTotalProgess({
+                        racers: receivedMessage.gameState.map((client: { id: string | null; progress: any; position: any; }) => ({
+                        name: client.id,
+                        isUser: client.id === userId,
+                        progress: client.progress,
+                        position: client.position
+                        }))
+                    });
+                } 
             } catch (err) {
                 console.error("Failed to parse message", err);
             }
