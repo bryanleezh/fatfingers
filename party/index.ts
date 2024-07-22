@@ -74,7 +74,7 @@ export default class Server implements Party.Server {
       this.finishedClients = [];
 
       this.room.broadcast(
-        JSON.stringify({type: "raceCountdown", message: generateWord(30)}),
+        JSON.stringify({type: "raceCountdown", message: generateWord(1)}),
       );
     } else if (receivedMessage.type === "progressUpdate") {
       const clientState = this.clientStates.get(sender.id);
@@ -89,6 +89,16 @@ export default class Server implements Party.Server {
         clientState.position = this.finishedClients.length + 1;
         this.finishedClients.push(sender.id);
         this.broadcastGameState();
+
+        // Check if all users have completed
+        if (this.checkAllUsersComplete()) {
+          this.room.broadcast(
+            JSON.stringify({
+              type: "allUsersComplete",
+              message: "All users have completed the game!"
+            })
+          );
+        }
       }
     };
   }
@@ -105,6 +115,12 @@ export default class Server implements Party.Server {
         gameState
       })
     );
+  }
+
+  private checkAllUsersComplete() {
+    const totalClients = [...this.room.getConnections()].length;
+    const completedClients = this.finishedClients.length;
+    return totalClients === completedClients;
   }
 }
 

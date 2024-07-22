@@ -4,8 +4,9 @@ import MainMultiplayer from "./MainMultiplayer";
 import generateWord from "@/utils/generateWord";
 import RaceProgressBar from "./RaceProgressBar";
 import { useGameStateStore } from "@/store/gameState";
-import CountDown from "./CountDown";
+import CountDown from "./popups/CountDown";
 import ReadyButton from "./ReadyButton";
+import GameComplete from "./popups/GameComplete";
 
 
 type RoomSocketProps = {
@@ -34,6 +35,7 @@ export default function RoomSocket( {roomId} : RoomSocketProps ) {
     const [progress, setProgress] = useState<number>(0);
     const latestProgressRef = useRef(progress);
     const [totalProgress, setTotalProgess] = useState<TotalProgressState>({ racers: [] });
+    const [allUsersComplete, setAllUsersComplete] = useState(false);
 
     const mockProgress = [
         { name: "Bryan", isUser: true, progress: 30 },
@@ -58,14 +60,13 @@ export default function RoomSocket( {roomId} : RoomSocketProps ) {
     };
 
     const startGame = () => {
-        console.log("game start");
         setCountDown(false);
         setGameStart(true);
     };
 
     //  TODO: Reset entire party state t0 allow for play again function
     const resetGame = () => {
-
+        console.log("reset game");
     };
 
     const ws = usePartySocket({
@@ -93,12 +94,16 @@ export default function RoomSocket( {roomId} : RoomSocketProps ) {
                 } else if (receivedMessage.type === "gameStateUpdate") {
                     setTotalProgess({
                         racers: receivedMessage.gameState.map((client: { id: string | null; progress: any; position: any; }) => ({
-                        name: client.id,
-                        isUser: client.id === userId,
-                        progress: client.progress,
-                        position: client.position
+                            name: client.id,
+                            isUser: client.id === userId,
+                            progress: client.progress,
+                            position: client.position
                         }))
                     });
+                } else if (receivedMessage.type === "allUsersComplete") {
+                    setAllUsersComplete(true);
+                    // You can add any additional logic here, like showing a "Game Over" screen
+                    
                 } 
             } catch (err) {
                 console.error("Failed to parse message", err);
@@ -117,8 +122,6 @@ export default function RoomSocket( {roomId} : RoomSocketProps ) {
     useEffect(() => {
         if (gameStart && ws) {
             intervalRef.current = setInterval(() => {
-                console.log(totalProgress);
-                console.log("send progress update", latestProgressRef.current);
                 ws.send(JSON.stringify({ type: "progressUpdate", clientProgress: latestProgressRef.current }));
             }, 1500);
         } else if (!gameStart && intervalRef.current) {
@@ -142,6 +145,8 @@ export default function RoomSocket( {roomId} : RoomSocketProps ) {
     const handleComplete = () => {
         if (ws) {
             ws.send(JSON.stringify({type: "completeGame", message: "complete race"}));
+            // prevent keyboard events after completion
+            setGameStart(false);
         };
     };
 
@@ -153,8 +158,8 @@ export default function RoomSocket( {roomId} : RoomSocketProps ) {
             <p>Client Id: {userId}</p>
             <ReadyButton sendMessage={sendMessage} />
             <CountDown countDown={countDown} onTimeUp={startGame} />
+            <GameComplete allUsersComplete={allUsersComplete} userPosition={1} onReset={resetGame} />
             <RaceProgressBar racers={totalProgress.racers} />
-            {/* <RaceProgressBar racers={mockProgress} /> */}
             <MainMultiplayer para={para} onProgress={handleProgress} onGameComplete={handleComplete}/>
         </div>
     );
