@@ -11,17 +11,25 @@ export default function CountDown({ countDown, onTimeUp} : CountDownProps) {
     const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
     useEffect(() => {
+        console.log("CountDown effect triggered, countDown:", countDown);
         if (countDown) {
+            setTimer(5);
             intervalRef.current = setInterval(() => {
-                setTimer((prev) => prev - 1);
+                // setTimer((prev) => prev - 1);
+                setTimer((prev) => {
+                    console.log("Timer updated:", prev - 1);
+                    return prev - 1;
+                });
             }, 1000);
         } else if (!countDown && intervalRef.current) {
+            console.log("Clearing interval");
             clearInterval(intervalRef.current);
             intervalRef.current = null;
         }
 
         return () => {
             if (intervalRef.current) {
+                console.log("Cleanup: clearing interval");
                 clearInterval(intervalRef.current);
             }
         };
@@ -35,12 +43,6 @@ export default function CountDown({ countDown, onTimeUp} : CountDownProps) {
             }
         }
     }, [timer, countDown, onTimeUp]);
-
-    useEffect(() => {
-        if (!countDown) {
-            setTimer(timer);
-        }
-    }, [countDown, timer]);
 
     return (
         <div className={`${countDown ? '' : 'hidden'} fixed bg-background rounded-lg border p-6 w-full max-w-md flex flex-col items-center gap-6`}>

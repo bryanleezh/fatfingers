@@ -1,21 +1,23 @@
 import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
-import { useGameStateStore } from "@/store/gameState";
 
 type ReadyButtonProps = {
+    isReady: boolean;
     sendMessage: () => void;
 }
 
-export default function ReadyButton({sendMessage} : ReadyButtonProps) {
-    const [isReady, setIsReady] = useState<boolean>(false);
+export default function ReadyButton({isReady, sendMessage} : ReadyButtonProps) {
+    // const [isReady, setIsReady] = useState<boolean>(false);
     const [fadeClass, setFadeClass] = useState<string>('fade');
     const start = () => {
         sendMessage();
-        setIsReady(true);
+        // setIsReady(true);
     }
     useEffect(() => {
         if (isReady) {
             setFadeClass('fade fade-out');
+        } else {
+            setFadeClass('fade');
         }
     }, [isReady]);
 

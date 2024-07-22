@@ -100,6 +100,9 @@ export default class Server implements Party.Server {
           );
         }
       }
+    } else if (receivedMessage.type === "resetGame") {
+      this.resetGameState();
+      this.room.broadcast(JSON.stringify({ type: "gameReset", message: "Game has been reset!" }));
     };
   }
   private broadcastGameState() {
@@ -121,6 +124,18 @@ export default class Server implements Party.Server {
     const totalClients = [...this.room.getConnections()].length;
     const completedClients = this.finishedClients.length;
     return totalClients === completedClients;
+  }
+
+  private resetGameState() {
+    // Reset all client states
+    this.clientStates.forEach((state) => {
+      state.progress = 0;
+      state.position = null;
+    });
+    // Clear the finishedClients array
+    this.finishedClients = [];
+    // Broadcast the reset game state
+    this.broadcastGameState();
   }
 }
 

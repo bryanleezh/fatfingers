@@ -27,6 +27,7 @@ type TotalProgressState = {
 export default function RoomSocket( {roomId} : RoomSocketProps ) {
     const gameStart = useGameStateStore((state) => state.gameStart);
     const setGameStart = useGameStateStore((state) => state.setGameStart);
+    const [isReady, setIsReady] = useState<boolean>(false);
     const countDown = useGameStateStore((state) => state.countDown);
     const setCountDown = useGameStateStore((state) => state.setCountDown);
     const [para, setPara] = useState<string>(generateWord(30));
@@ -64,10 +65,18 @@ export default function RoomSocket( {roomId} : RoomSocketProps ) {
         setGameStart(true);
     };
 
-    //  TODO: Reset entire party state t0 allow for play again function
+    //  TODO: Reset entire party state to allow for play again function
     const resetGame = () => {
         console.log("reset game");
+        if (ws) {
+            ws.send(JSON.stringify({type: "resetGame"}));
+        }
     };
+
+    const determinePosition = () => {
+        const userRacer = totalProgress.racers.find(racer => racer.isUser);
+        return userRacer?.position;
+    }
 
     const ws = usePartySocket({
         host: "localhost:1999", // or your PartyKit server URL
@@ -90,7 +99,10 @@ export default function RoomSocket( {roomId} : RoomSocketProps ) {
                     if (userId) createTotalProgress(receivedMessage.clients, userId);
                 } else if (receivedMessage.type === "raceCountdown") {
                     setPara(receivedMessage.message);
-                    setCountDown(true);
+                    setIsReady(true);
+                    setTimeout(() => {
+                        setCountDown(true);
+                    }, 0);
                 } else if (receivedMessage.type === "gameStateUpdate") {
                     setTotalProgess({
                         racers: receivedMessage.gameState.map((client: { id: string | null; progress: any; position: any; }) => ({
@@ -102,9 +114,14 @@ export default function RoomSocket( {roomId} : RoomSocketProps ) {
                     });
                 } else if (receivedMessage.type === "allUsersComplete") {
                     setAllUsersComplete(true);
-                    // You can add any additional logic here, like showing a "Game Over" screen
-                    
-                } 
+                } else if (receivedMessage.type === "gameReset") {
+                    // TODO: Reset game for everyone
+                    setGameStart(false);
+                    setCountDown(false);
+                    setProgress(0);
+                    setAllUsersComplete(false);
+                    setIsReady(false);
+                }
             } catch (err) {
                 console.error("Failed to parse message", err);
             }
@@ -136,6 +153,13 @@ export default function RoomSocket( {roomId} : RoomSocketProps ) {
         };
     }, [gameStart, ws]);
 
+    useEffect(() => {
+        if (isReady) {
+            setCountDown(true);
+        }
+    }, [isReady]);
+
+
     const sendMessage = () => {
         if (ws) {
             ws.send(JSON.stringify({type: "startGame", message: "start race"}));
@@ -152,13 +176,13 @@ export default function RoomSocket( {roomId} : RoomSocketProps ) {
 
     return (
         <div className="flex flex-col gap-4 w-3/4 flex-grow items-center justify-center">
-            <p>Connected to room:</p>
+            <p>Room Code (Share this code with your friends!):</p>
             <p>{roomId}</p>
             <p>Players in room: {connectionCount}</p>
             <p>Client Id: {userId}</p>
-            <ReadyButton sendMessage={sendMessage} />
+            <ReadyButton isReady={isReady} sendMessage={sendMessage} />
             <CountDown countDown={countDown} onTimeUp={startGame} />
-            <GameComplete allUsersComplete={allUsersComplete} userPosition={1} onReset={resetGame} />
+            <GameComplete allUsersComplete={allUsersComplete} userPosition={determinePosition()} onReset={resetGame} />
             <RaceProgressBar racers={totalProgress.racers} />
             <MainMultiplayer para={para} onProgress={handleProgress} onGameComplete={handleComplete}/>
         </div>
