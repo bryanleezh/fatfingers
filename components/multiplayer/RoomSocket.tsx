@@ -32,8 +32,8 @@ export default function RoomSocket( {roomId} : RoomSocketProps ) {
     const [userId, setUserId] = useState<string | null>(null);
     const [connectionCount, setConnectionCount] = useState<number>(0);
     const [progress, setProgress] = useState<number>(0);
+    const latestProgressRef = useRef(progress);
     const [totalProgress, setTotalProgess] = useState<TotalProgressState>({ racers: [] });
-    const [finishOrder, setFinishOrder] = useState<string[]>([]);
 
     const mockProgress = [
         { name: "Bryan", isUser: true, progress: 30 },
@@ -41,8 +41,9 @@ export default function RoomSocket( {roomId} : RoomSocketProps ) {
         { name: "Me", isUser: false, progress: 100, position: 1 },
     ];
 
-    const handleProgress = (progress: number) => {
-        setProgress(progress);
+    const handleProgress = (newProgress: number) => {
+        setProgress(newProgress);
+        latestProgressRef.current = newProgress;
     };
 
     const createTotalProgress = (clients: string[], userId: string) => {
@@ -54,14 +55,6 @@ export default function RoomSocket( {roomId} : RoomSocketProps ) {
         }));
 
         setTotalProgess({ racers: newRacers });
-    };
-
-    const updateTotalProgress = (client: string, newProgress: number) => {
-        setTotalProgess(prevState => ({
-            racers: prevState.racers.map(racer =>
-                racer.name === client ? { ...racer, progress: newProgress } : racer
-            )
-        }));
     };
 
     const startGame = () => {
@@ -125,8 +118,8 @@ export default function RoomSocket( {roomId} : RoomSocketProps ) {
         if (gameStart && ws) {
             intervalRef.current = setInterval(() => {
                 console.log(totalProgress);
-                console.log("send progress update");
-                ws.send(JSON.stringify({ type: "progressUpdate", clientProgress: progress }));
+                console.log("send progress update", latestProgressRef.current);
+                ws.send(JSON.stringify({ type: "progressUpdate", clientProgress: latestProgressRef.current }));
             }, 1500);
         } else if (!gameStart && intervalRef.current) {
             clearInterval(intervalRef.current);
@@ -138,7 +131,7 @@ export default function RoomSocket( {roomId} : RoomSocketProps ) {
                 clearInterval(intervalRef.current);
             }
         };
-    }, [gameStart, progress, ws]);
+    }, [gameStart, ws]);
 
     const sendMessage = () => {
         if (ws) {
