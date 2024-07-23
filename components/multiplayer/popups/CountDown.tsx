@@ -1,35 +1,30 @@
+import { useGameStateStore } from "@/store/gameState";
 import { useEffect, useRef, useState } from "react";
 
 type CountDownProps = {
-    countDown: boolean;
+    // countDown: boolean;
     onTimeUp: () => void;
 }
 
-export default function CountDown({ countDown, onTimeUp} : CountDownProps) {
+export default function CountDown({onTimeUp} : CountDownProps) {
     const [timer, setTimer] = useState<number>(5);
+    const countDown = useGameStateStore((state) => state.countDown);
 
     const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
     useEffect(() => {
-        console.log("CountDown effect triggered, countDown:", countDown);
         if (countDown) {
             setTimer(5);
             intervalRef.current = setInterval(() => {
-                // setTimer((prev) => prev - 1);
-                setTimer((prev) => {
-                    console.log("Timer updated:", prev - 1);
-                    return prev - 1;
-                });
+                setTimer((prev) => prev - 1);
             }, 1000);
         } else if (!countDown && intervalRef.current) {
-            console.log("Clearing interval");
             clearInterval(intervalRef.current);
             intervalRef.current = null;
         }
 
         return () => {
             if (intervalRef.current) {
-                console.log("Cleanup: clearing interval");
                 clearInterval(intervalRef.current);
             }
         };
@@ -41,6 +36,7 @@ export default function CountDown({ countDown, onTimeUp} : CountDownProps) {
             if (intervalRef.current) {
                 clearInterval(intervalRef.current);
             }
+            setTimer(5);
         }
     }, [timer, countDown, onTimeUp]);
 

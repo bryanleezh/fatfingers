@@ -28,7 +28,6 @@ export default function RoomSocket( {roomId} : RoomSocketProps ) {
     const gameStart = useGameStateStore((state) => state.gameStart);
     const setGameStart = useGameStateStore((state) => state.setGameStart);
     const [isReady, setIsReady] = useState<boolean>(false);
-    const countDown = useGameStateStore((state) => state.countDown);
     const setCountDown = useGameStateStore((state) => state.setCountDown);
     const [para, setPara] = useState<string>(generateWord(30));
     const [userId, setUserId] = useState<string | null>(null);
@@ -65,13 +64,13 @@ export default function RoomSocket( {roomId} : RoomSocketProps ) {
         setGameStart(true);
     };
 
-    //  TODO: Reset entire party state to allow for play again function
-    const resetGame = () => {
-        console.log("reset game");
-        if (ws) {
-            ws.send(JSON.stringify({type: "resetGame"}));
-        }
-    };
+    const resetGameState = () => {
+        setGameStart(false);
+        setCountDown(false);
+        setProgress(0);
+        setAllUsersComplete(false);
+        setIsReady(false);
+    }
 
     const determinePosition = () => {
         const userRacer = totalProgress.racers.find(racer => racer.isUser);
@@ -116,11 +115,7 @@ export default function RoomSocket( {roomId} : RoomSocketProps ) {
                     setAllUsersComplete(true);
                 } else if (receivedMessage.type === "gameReset") {
                     // TODO: Reset game for everyone
-                    setGameStart(false);
-                    setCountDown(false);
-                    setProgress(0);
-                    setAllUsersComplete(false);
-                    setIsReady(false);
+                    resetGameState();
                 }
             } catch (err) {
                 console.error("Failed to parse message", err);
@@ -174,6 +169,13 @@ export default function RoomSocket( {roomId} : RoomSocketProps ) {
         };
     };
 
+    const resetGame = () => {
+        console.log("reset game");
+        if (ws) {
+            ws.send(JSON.stringify({type: "resetGame"}));
+        }
+    };
+
     return (
         <div className="flex flex-col gap-4 w-3/4 flex-grow items-center justify-center">
             <p>Room Code (Share this code with your friends!):</p>
@@ -181,7 +183,7 @@ export default function RoomSocket( {roomId} : RoomSocketProps ) {
             <p>Players in room: {connectionCount}</p>
             <p>Client Id: {userId}</p>
             <ReadyButton isReady={isReady} sendMessage={sendMessage} />
-            <CountDown countDown={countDown} onTimeUp={startGame} />
+            <CountDown onTimeUp={startGame} />
             <GameComplete allUsersComplete={allUsersComplete} userPosition={determinePosition()} onReset={resetGame} />
             <RaceProgressBar racers={totalProgress.racers} />
             <MainMultiplayer para={para} onProgress={handleProgress} onGameComplete={handleComplete}/>
