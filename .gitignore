@@ -2,7 +2,7 @@
 
 # partykit
 .partykit
-
+.env
 # dependencies
 /node_modules
 /.pnp

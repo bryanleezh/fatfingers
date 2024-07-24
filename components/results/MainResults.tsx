@@ -70,7 +70,6 @@ export default function MainResults({ userInput, para, onRestartGame }: MainResu
         setErrorPercentage(errorPercentage);
         setNetwpm(netwpm);
         setCpm(cpm);
-        console.log("stats set");
     }
 
     // TODO: Add all new results into state to store for use for the next result
