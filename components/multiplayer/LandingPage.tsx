@@ -12,7 +12,6 @@ export default function LandingPage() {
 
   const joinRoom = () => {
     if (roomId !== "") {
-      console.log("join room", roomId);
       router.push(`/multiplayer/${roomId}`);
     } else {
       alert("Please enter a room id!");
@@ -21,7 +20,6 @@ export default function LandingPage() {
 
   const createRoom = () => {
     const tempId = UniqueStringId();
-    console.log("create room");
     router.push(`/multiplayer/${tempId}`);
   }
 
