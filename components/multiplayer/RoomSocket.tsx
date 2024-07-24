@@ -78,7 +78,8 @@ export default function RoomSocket( {roomId} : RoomSocketProps ) {
     }
 
     const ws = usePartySocket({
-        host: "localhost:1999", // or your PartyKit server URL
+        host: process.env.NEXT_PUBLIC_PARTYKIT_ENV,
+        // host: "localhost:1999", // or your PartyKit server URL
         room: roomId,
         onOpen() {
             console.log(`connected to room ${roomId}`);
