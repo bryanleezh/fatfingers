@@ -22,7 +22,7 @@
     "cmdk": "^1.0.0",
     "js-base64": "^3.7.7",
     "lucide-react": "^0.378.0",
-    "next": "14.2.3",
+    "next": "14.2.35",
     "next-themes": "^0.3.0",
     "next-view-transitions": "^0.1.1",
     "partysocket": "1.0.1",
